@@ -1,0 +1,18 @@
+---
+title: "Gapminder exploration"
+author: "Amanda Cheung"
+date: "9/26/2017"
+output: github_document
+---
+*Exploring the Gapminder data for STAT 545 homework 02*
+
+### Bring rectangular data in
+1. Load gapminder and dplyr via the tidyverse meta-package
+```{r}
+library(gapminder)
+library(tidyverse)
+```
+
+### Smell test the data
+
+
