@@ -4,19 +4,19 @@ author: "Amanda Cheung"
 date: "9/26/2017"
 output: github_document
 ---
-*Exploring the Gapminder data for STAT 545 homework 02*
+Exploring the Gapminder data for STAT 545 homework 02
 
-### Bring rectangular data in
+## Bring rectangular data in
 
-Load gapminder and dplyr via the tidyverse meta-package.
+*Load gapminder and dplyr via the tidyverse meta-package.*
 ```{r}
 library(gapminder)
 library(tidyverse)
 ```
 
-### Smell test the data
+## Smell test the data
 
-1. Is it a data.frame, a matrix, a vector, a list? What's its class?
+**Is it a data.frame, a matrix, a vector, a list? What's its class?**
 
 *Display the structure of the gapminder object.*
 ```{r}
@@ -27,33 +27,36 @@ str(gapminder)
 class(gapminder)
 ```
 
-Gapminder is a data.frame. It's class tbl_df, tbl, and data.frame.
+- Gapminder is a data.frame. It is class tbl_df, tbl, and data.frame.
 
-2. How many variables/columns? How many rows/observations?
+**How many variables/columns? How many rows/observations?**
+
 *Find the number of columns and rows.*
 ```{r}
 ncol(gapminder)
 nrow(gapminder)
 ```
-Gapminder has 6 variables/columns and 1604 rows/observations. This information is also seen above with str().
+- Gapminder has 6 variables/columns and 1604 rows/observations. This information is also seen above with str().
 
-3. Can you get these facts about “extent” or “size” in more than one way? Can you imagine different functions being useful in different contexts?
-Alternative ways to get facts about "extent" or "size".
+**Can you get these facts about “extent” or “size” in more than one way? Can you imagine different functions being useful in different contexts?**
+
+- Alternative ways to get facts about "extent" or "size".
 ```{r}
 summary(gapminder)
 dim(gapminder)
 length(gapminder)
 ```
 
-Different functions can be used depending on the type of information you want.
-str() provides an overview of the object. 
-class() provides information about the class of the object.
-ncol() and length() provides the number of columns/length of the object.
-nrow() provides the number of rows of the object.
-dim() provides the dimensions, number of rows x number of columns, of the object.
-summary() provides a statistical overview.
+- Different functions can be used depending on the type of information you want.
+    + str() provides an overview of the object. 
+    + class() provides information about the class of the object.
+    + ncol() and length() provides the number of columns/length of the object.
+    + nrow() provides the number of rows of the object.
+    + dim() provides the dimensions, number of rows x number of columns, of the object.
+    + summary() provides a statistical overview.
 
-4. What data type is each variable?
+**What data type is each variable?**
+
 From the structure function, str(), above:
 
 variable  | data type
@@ -64,6 +67,8 @@ year      | integer
 lifeExp   | numeric
 pop       | integer
 gdpPercap | numeric
+
+
 
 
 

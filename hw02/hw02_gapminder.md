@@ -3,11 +3,12 @@ Gapminder exploration
 Amanda Cheung
 9/26/2017
 
-*Exploring the Gapminder data for STAT 545 homework 02*
+Exploring the Gapminder data for STAT 545 homework 02
 
-### Bring rectangular data in
+Bring rectangular data in
+-------------------------
 
-Load gapminder and dplyr via the tidyverse meta-package.
+*Load gapminder and dplyr via the tidyverse meta-package.*
 
 ``` r
 library(gapminder)
@@ -26,11 +27,12 @@ library(tidyverse)
     ## filter(): dplyr, stats
     ## lag():    dplyr, stats
 
-### Smell test the data
+Smell test the data
+-------------------
 
-1.  Is it a data.frame, a matrix, a vector, a list? What's its class?
+**Is it a data.frame, a matrix, a vector, a list? What's its class?**
 
-Display the structure of the gapminder object.
+*Display the structure of the gapminder object.*
 
 ``` r
 str(gapminder)
@@ -44,7 +46,7 @@ str(gapminder)
     ##  $ pop      : int  8425333 9240934 10267083 11537966 13079460 14880372 12881816 13867957 16317921 22227415 ...
     ##  $ gdpPercap: num  779 821 853 836 740 ...
 
-Alternatively, you can display the class.
+*Alternatively, you can display the class.*
 
 ``` r
 class(gapminder)
@@ -52,9 +54,11 @@ class(gapminder)
 
     ## [1] "tbl_df"     "tbl"        "data.frame"
 
-Gapminder is a data.frame. It's class tbl\_df, tbl, and data.frame.
+-   Gapminder is a data.frame. It is class tbl\_df, tbl, and data.frame.
 
-1.  How many variables/columns? How many rows/observations? Find the number of columns and rows.
+**How many variables/columns? How many rows/observations?**
+
+*Find the number of columns and rows.*
 
 ``` r
 ncol(gapminder)
@@ -68,9 +72,11 @@ nrow(gapminder)
 
     ## [1] 1704
 
-Gapminder has 6 variables/columns and 1604 rows/observations. This information is also seen above with str().
+-   Gapminder has 6 variables/columns and 1604 rows/observations. This information is also seen above with str().
 
-1.  Can you get these facts about “extent” or “size” in more than one way? Can you imagine different functions being useful in different contexts? Alternative ways to get facts about "extent" or "size".
+**Can you get these facts about “extent” or “size” in more than one way? Can you imagine different functions being useful in different contexts?**
+
+-   Alternative ways to get facts about "extent" or "size".
 
 ``` r
 summary(gapminder)
@@ -105,4 +111,23 @@ length(gapminder)
 
     ## [1] 6
 
-The structure function, str(), provides an overview
+-   Different functions can be used depending on the type of information you want.
+    -   str() provides an overview of the object.
+    -   class() provides information about the class of the object.
+    -   ncol() and length() provides the number of columns/length of the object.
+    -   nrow() provides the number of rows of the object.
+    -   dim() provides the dimensions, number of rows x number of columns, of the object.
+    -   summary() provides a statistical overview.
+
+**What data type is each variable?**
+
+From the structure function, str(), above:
+
+| variable  | data type |
+|-----------|-----------|
+| country   | factor    |
+| continent | factor    |
+| year      | integer   |
+| lifeExp   | numeric   |
+| pop       | integer   |
+| gdpPercap | numeric   |
