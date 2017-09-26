@@ -8,7 +8,7 @@ Exploring the Gapminder data for STAT 545 homework 02
 Bring rectangular data in
 -------------------------
 
-*Load gapminder and dplyr via the tidyverse meta-package.*
+Load gapminder and dplyr via the tidyverse meta-package.
 
 ``` r
 library(gapminder)
@@ -32,7 +32,7 @@ Smell test the data
 
 **Is it a data.frame, a matrix, a vector, a list? What's its class?**
 
-*Display the structure of the gapminder object.*
+Display the structure of the gapminder object.
 
 ``` r
 str(gapminder)
@@ -46,7 +46,7 @@ str(gapminder)
     ##  $ pop      : int  8425333 9240934 10267083 11537966 13079460 14880372 12881816 13867957 16317921 22227415 ...
     ##  $ gdpPercap: num  779 821 853 836 740 ...
 
-*Alternatively, you can display the class.*
+Alternatively, you can display the class.
 
 ``` r
 class(gapminder)
@@ -58,7 +58,7 @@ class(gapminder)
 
 **How many variables/columns? How many rows/observations?**
 
-*Find the number of columns and rows.*
+Find the number of columns and rows.
 
 ``` r
 ncol(gapminder)
@@ -131,3 +131,67 @@ From the structure function, str(), above:
 | lifeExp   | numeric   |
 | pop       | integer   |
 | gdpPercap | numeric   |
+
+Explore individual variables
+----------------------------
+
+### Continent as a categorical variable
+
+**What are possible values (or range, whichever is appropriate) of each variable?**
+
+Looking at the summary, table, and levels of the continent variable.
+
+``` r
+summary(gapminder$continent)
+```
+
+    ##   Africa Americas     Asia   Europe  Oceania 
+    ##      624      300      396      360       24
+
+``` r
+table(gapminder$continent)
+```
+
+    ## 
+    ##   Africa Americas     Asia   Europe  Oceania 
+    ##      624      300      396      360       24
+
+``` r
+levels(gapminder$continent)
+```
+
+    ## [1] "Africa"   "Americas" "Asia"     "Europe"   "Oceania"
+
+-   The continent variable has 5 values.
+
+1.  Africa
+2.  Americas
+3.  Asia
+4.  Europe
+5.  Oceania
+
+**What values are typical? What’s the spread? What’s the distribution?**
+
+Observations associated with each continent in a bar graph.
+
+``` r
+ggplot(gapminder, aes(x=continent, fill=continent)) + geom_bar()
+```
+
+![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-7-1.png)
+
+Observations associated with each continent in a density plot.
+
+``` r
+ggplot(gapminder, aes(x=continent, fill=continent, colour=continent)) + geom_density(alpha=0.5)
+```
+
+![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-8-1.png)
+
+Observations associated with each continent in a pie chart.
+
+``` r
+pie(table(gapminder$continent), col=c("blue","red","yellow", "orange", "green"), main="Observations associated with each continent")
+```
+
+![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-1.png)

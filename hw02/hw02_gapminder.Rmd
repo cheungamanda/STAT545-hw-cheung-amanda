@@ -8,7 +8,7 @@ Exploring the Gapminder data for STAT 545 homework 02
 
 ## Bring rectangular data in
 
-*Load gapminder and dplyr via the tidyverse meta-package.*
+Load gapminder and dplyr via the tidyverse meta-package.
 ```{r}
 library(gapminder)
 library(tidyverse)
@@ -18,11 +18,11 @@ library(tidyverse)
 
 **Is it a data.frame, a matrix, a vector, a list? What's its class?**
 
-*Display the structure of the gapminder object.*
+Display the structure of the gapminder object.
 ```{r}
 str(gapminder)
 ```
-*Alternatively, you can display the class.*
+Alternatively, you can display the class.
 ```{r}
 class(gapminder)
 ```
@@ -31,7 +31,7 @@ class(gapminder)
 
 **How many variables/columns? How many rows/observations?**
 
-*Find the number of columns and rows.*
+Find the number of columns and rows.
 ```{r}
 ncol(gapminder)
 nrow(gapminder)
@@ -41,6 +41,7 @@ nrow(gapminder)
 **Can you get these facts about “extent” or “size” in more than one way? Can you imagine different functions being useful in different contexts?**
 
 - Alternative ways to get facts about "extent" or "size".
+
 ```{r}
 summary(gapminder)
 dim(gapminder)
@@ -67,6 +68,43 @@ year      | integer
 lifeExp   | numeric
 pop       | integer
 gdpPercap | numeric
+
+## Explore individual variables
+
+### Continent as a categorical variable
+
+**What are possible values (or range, whichever is appropriate) of each variable?**
+
+Looking at the summary, table, and levels of the continent variable.
+```{r}
+summary(gapminder$continent)
+table(gapminder$continent)
+levels(gapminder$continent)
+```
+- The continent variable has 5 values.
+1. Africa
+2. Americas
+3. Asia
+4. Europe
+5. Oceania
+
+**What values are typical? What’s the spread? What’s the distribution?**
+
+Observations associated with each continent in a bar graph.
+```{r}
+ggplot(gapminder, aes(x=continent, fill=continent)) + geom_bar()
+```
+
+Observations associated with each continent in a density plot.
+```{r}
+ggplot(gapminder, aes(x=continent, fill=continent, colour=continent)) + geom_density(alpha=0.5)
+```
+
+Observations associated with each continent in a pie chart.
+```{r}
+pie(table(gapminder$continent), col=c("blue","red","yellow", "orange", "green"), main="Observations associated with each continent")
+```
+
 
 
 
