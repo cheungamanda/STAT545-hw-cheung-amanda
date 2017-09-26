@@ -105,15 +105,28 @@ Observations associated with each continent in a pie chart.
 pie(table(gapminder$continent), col=c("blue","red","yellow", "orange", "green"), main="Observations associated with each continent")
 ```
 
+### Life expectancy as a quantitative variable
 
+**What are possible values (or range, whichever is appropriate) of each variable?**
 
+Looking at the summary, head and tail values, and range of the life expectancy variable.
+```{r}
+summary(gapminder$lifeExp)
+head(gapminder$lifeExp)
+tail(gapminder$lifeExp)
+range(gapminder$lifeExp)
+```
 
+**What values are typical? What’s the spread? What’s the distribution?**
 
+Histogram of life expectancy values to illustrate the spread and distribution.
+```{r}
+hist(gapminder$lifeExp)
+```
 
+Density plot of life expectancy values to illustrate the spread and distribution.
+```{r}
+ggplot(gapminder, aes(x=lifeExp)) + geom_density(colour="blue", fill="blue", alpha=0.25)
+```
 
-
-
-
-
-
-
+## Explore various plot types

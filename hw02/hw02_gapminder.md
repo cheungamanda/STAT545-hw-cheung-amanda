@@ -195,3 +195,55 @@ pie(table(gapminder$continent), col=c("blue","red","yellow", "orange", "green"),
 ```
 
 ![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-1.png)
+
+### Life expectancy as a quantitative variable
+
+**What are possible values (or range, whichever is appropriate) of each variable?**
+
+Looking at the summary, head and tail values, and range of the life expectancy variable.
+
+``` r
+summary(gapminder$lifeExp)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ##   23.60   48.20   60.71   59.47   70.85   82.60
+
+``` r
+head(gapminder$lifeExp)
+```
+
+    ## [1] 28.801 30.332 31.997 34.020 36.088 38.438
+
+``` r
+tail(gapminder$lifeExp)
+```
+
+    ## [1] 60.363 62.351 60.377 46.809 39.989 43.487
+
+``` r
+range(gapminder$lifeExp)
+```
+
+    ## [1] 23.599 82.603
+
+**What values are typical? What’s the spread? What’s the distribution?**
+
+Histogram of life expectancy values to illustrate the spread and distribution.
+
+``` r
+hist(gapminder$lifeExp)
+```
+
+![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-11-1.png)
+
+Density plot of life expectancy values to illustrate the spread and distribution.
+
+``` r
+ggplot(gapminder, aes(x=lifeExp)) + geom_density(colour="blue", fill="blue", alpha=0.25)
+```
+
+![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-1.png)
+
+Explore various plot types
+--------------------------
