@@ -30,7 +30,7 @@ library(tidyverse)
 Smell test the data
 -------------------
 
-**Is it a data.frame, a matrix, a vector, a list? What's its class?**
+### Is it a data.frame, a matrix, a vector, a list? What's its class?
 
 Display the structure of the gapminder object.
 
@@ -56,7 +56,7 @@ class(gapminder)
 
 -   Gapminder is a data.frame. It is class tbl\_df, tbl, and data.frame.
 
-**How many variables/columns? How many rows/observations?**
+### How many variables/columns? How many rows/observations?
 
 Find the number of columns and rows.
 
@@ -74,7 +74,7 @@ nrow(gapminder)
 
 -   Gapminder has 6 variables/columns and 1604 rows/observations. This information is also seen above with str().
 
-**Can you get these facts about “extent” or “size” in more than one way? Can you imagine different functions being useful in different contexts?**
+### Can you get these facts about “extent” or “size” in more than one way? Can you imagine different functions being useful in different contexts?
 
 -   Alternative ways to get facts about "extent" or "size".
 
@@ -119,7 +119,7 @@ length(gapminder)
     -   dim() provides the dimensions, number of rows x number of columns, of the object.
     -   summary() provides a statistical overview.
 
-**What data type is each variable?**
+### What data type is each variable?
 
 From the structure function, str(), above:
 
@@ -137,9 +137,9 @@ Explore individual variables
 
 ### Continent as a categorical variable
 
-**What are possible values (or range, whichever is appropriate) of each variable?**
+### What are possible values (or range, whichever is appropriate) of each variable?
 
-Looking at the summary, table, and levels of the continent variable.
+Look at the summary, table, and levels of the continent variable.
 
 ``` r
 summary(gapminder$continent)
@@ -170,9 +170,9 @@ levels(gapminder$continent)
 4.  Europe
 5.  Oceania
 
-**What values are typical? What’s the spread? What’s the distribution?**
+### What values are typical? What’s the spread? What’s the distribution?
 
-Observations associated with each continent in a bar graph.
+Observations associated with each continent in a bar graph to illustrate the distribution of data.
 
 ``` r
 ggplot(gapminder, aes(x=continent, fill=continent)) + geom_bar()
@@ -180,7 +180,7 @@ ggplot(gapminder, aes(x=continent, fill=continent)) + geom_bar()
 
 ![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-7-1.png)
 
-Observations associated with each continent in a density plot.
+Observations associated with each continent in a density plot to illustrate the spread of the data.
 
 ``` r
 ggplot(gapminder, aes(x=continent, fill=continent, colour=continent)) + geom_density(alpha=0.5)
@@ -188,7 +188,7 @@ ggplot(gapminder, aes(x=continent, fill=continent, colour=continent)) + geom_den
 
 ![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-8-1.png)
 
-Observations associated with each continent in a pie chart.
+Observations associated with each continent in a pie chart to illustrate the distribution of the data.
 
 ``` r
 pie(table(gapminder$continent), col=c("blue","red","yellow", "orange", "green"), main="Observations associated with each continent")
@@ -198,9 +198,9 @@ pie(table(gapminder$continent), col=c("blue","red","yellow", "orange", "green"),
 
 ### Life expectancy as a quantitative variable
 
-**What are possible values (or range, whichever is appropriate) of each variable?**
+### What are possible values (or range, whichever is appropriate) of each variable?
 
-Looking at the summary, head and tail values, and range of the life expectancy variable.
+Look at the summary, head and tail values, and range of the life expectancy variable.
 
 ``` r
 summary(gapminder$lifeExp)
@@ -227,9 +227,11 @@ range(gapminder$lifeExp)
 
     ## [1] 23.599 82.603
 
-**What values are typical? What’s the spread? What’s the distribution?**
+-   The data of life expectancy ranges from 23.599 to 82.603. The mean is 59.47 and the median is 60.71.
 
-Histogram of life expectancy values to illustrate the spread and distribution.
+### What values are typical? What’s the spread? What’s the distribution?
+
+Histogram of life expectancy values to illustrate the distribution.
 
 ``` r
 ggplot(gapminder, aes(x=lifeExp, fill=continent)) + geom_histogram(binwidth=10)
@@ -237,7 +239,7 @@ ggplot(gapminder, aes(x=lifeExp, fill=continent)) + geom_histogram(binwidth=10)
 
 ![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-11-1.png)
 
-Density plot of life expectancy values to illustrate the spread and distribution.
+Density plot of life expectancy values to illustrate the spread.
 
 ``` r
 ggplot(gapminder, aes(x=lifeExp)) + geom_density(colour="blue", fill="blue", alpha=0.25)
@@ -248,9 +250,9 @@ ggplot(gapminder, aes(x=lifeExp)) + geom_density(colour="blue", fill="blue", alp
 Explore various plot types
 --------------------------
 
-#### Scatterplot
+### Scatterplot
 
-Scatterplot of year vs. life expectancy in Europe.
+Scatterplot of year vs. life expectancy in European countries.
 
 ``` r
 ggplot(filter(gapminder, continent == "Europe" ), aes(x=year, y=lifeExp, colour=country)) + geom_line() + geom_point()
@@ -258,7 +260,7 @@ ggplot(filter(gapminder, continent == "Europe" ), aes(x=year, y=lifeExp, colour=
 
 ![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-13-1.png)
 
-Scatterplot of population vs. life expectancy in the '80s and '90s in Africa, the Americas, and Asia.
+Scatterplot of population vs. life expectancy in the '80s and '90s in Africa, the Americas, and Asia and their respective GDP per capita.
 
 ``` r
 ggplot(gapminder %>% 
@@ -269,15 +271,17 @@ ggplot(gapminder %>%
 
 ![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-14-1.png)
 
+Scatterplot of GDP per capita vs. population in Africa, Americas, Asia, Europe, and Oceania.
+
 ``` r
 ggplot(gapminder, aes(x=gdpPercap, y=pop)) + scale_y_log10() + facet_wrap(~ continent) + geom_point(alpha=0.25) + geom_smooth(se=FALSE, method="loess", aes(colour=continent))
 ```
 
 ![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-15-1.png)
 
-#### Frequency polygon
+### Frequency polygon
 
-Frequency polygon of life expectancy in China, Japan, Vietnam, and Thailand.
+Illustration of the life expectancy in China, Japan, Vietnam, and Thailand using a frequency polygon.
 
 ``` r
 ggplot(gapminder %>%  
@@ -288,9 +292,9 @@ ggplot(gapminder %>%
 
 ![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-16-1.png)
 
-#### Histogram
+### Histogram
 
-Histogram of GDP in billions (calculated by multiplying GPD per capita with population) in Oceania.
+The distribution of GDP in billions (calculated by multiplying GPD per capita with population) in Oceania using a histogram.
 
 ``` r
 ggplot(gapminder %>% 
@@ -302,7 +306,7 @@ ggplot(gapminder %>%
 
 ![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-17-1.png)
 
-#### Boxplot
+### Boxplot
 
 The distribution of population of each continent in the '90s shown in a boxplot.
 
@@ -315,7 +319,7 @@ ggplot(gapminder %>%
 
 ![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-18-1.png)
 
-#### Area chart
+### Area chart
 
 The spread of GPD per capita each year in Algeria, Canada, Denmark, and India.
 
