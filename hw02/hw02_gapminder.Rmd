@@ -142,8 +142,8 @@ Scatterplot of population vs. life expectancy in the '80s and '90s in Africa, th
 ```{r}
 ggplot(gapminder %>% 
          filter(year <= 1999, year >= 1980, continent %in% c("Americas", "Africa", "Asia")) %>% 
-         select(continent, pop, lifeExp),
-         aes(x=pop, y=lifeExp, colour=continent)) + geom_point() + geom_smooth(se=FALSE, method="loess") + scale_x_log10()
+         select(continent, pop, lifeExp, gdpPercap),
+         aes(x=pop, y=lifeExp, colour=continent)) + geom_point(aes(size=gdpPercap), alpha=0.5) + geom_smooth(se=FALSE, method="loess") + scale_x_log10()
 ```
 
 ```{r}
@@ -191,11 +191,15 @@ ggplot(gapminder %>%
 ```
 
 ## I want to do more!
+
 ```{r}
 filter(gapminder, country == c("Rwanda", "Afghanistan"))
 ```
 
+The code above does not suceed in retrieving all the data for Afghanistan and Rwanda. The "==" operator does not work for more than one category where there is overlapping data (i.e. if Afghanistan and Rwanda share the same year, only one set of data will be retrieved).
+
+The "%in%" operator is used along with c(), to create a vector, allowing retrieval of all the data where both countries share the same element (i.e. year). 
+
 ```{r}
 filter(gapminder, country %in% c("Rwanda", "Afghanistan"))
 ```
-

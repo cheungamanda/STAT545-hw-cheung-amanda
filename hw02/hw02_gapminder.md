@@ -263,11 +263,17 @@ Scatterplot of population vs. life expectancy in the '80s and '90s in Africa, th
 ``` r
 ggplot(gapminder %>% 
          filter(year <= 1999, year >= 1980, continent %in% c("Americas", "Africa", "Asia")) %>% 
-         select(continent, pop, lifeExp),
-         aes(x=pop, y=lifeExp, colour=continent)) + geom_point() + geom_smooth(se=FALSE, method="loess") + scale_x_log10()
+         select(continent, pop, lifeExp, gdpPercap),
+         aes(x=pop, y=lifeExp, colour=continent)) + geom_point(aes(size=gdpPercap), alpha=0.5) + geom_smooth(se=FALSE, method="loess") + scale_x_log10()
 ```
 
 ![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-14-1.png)
+
+``` r
+ggplot(gapminder, aes(x=gdpPercap, y=pop)) + scale_y_log10() + facet_wrap(~ continent) + geom_point(alpha=0.25) + geom_smooth(se=FALSE, method="loess", aes(colour=continent))
+```
+
+![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-15-1.png)
 
 #### Frequency polygon
 
@@ -275,9 +281,94 @@ Frequency polygon of life expectancy in China, Japan, Vietnam, and Thailand.
 
 ``` r
 ggplot(gapminder %>%  
-       filter(continent == "Asia", country %in% c("China", "Japan", "Vietnam", "Thailand")) %>%
-       select(country, lifeExp), 
-       aes(x=lifeExp, colour=country)) + geom_freqpoly(binwidth=10)
+         filter(continent == "Asia", country %in% c("China", "Japan", "Vietnam", "Thailand")) %>%
+         select(country, lifeExp), 
+         aes(x=lifeExp, colour=country)) + geom_freqpoly(binwidth=10)
 ```
 
-![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-15-1.png)
+![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-16-1.png)
+
+#### Histogram
+
+Histogram of GDP in billions (calculated by multiplying GPD per capita with population) in Oceania.
+
+``` r
+ggplot(gapminder %>% 
+         mutate(gdpBill = (gdpPercap * pop)/1000000000) %>% 
+         filter(continent == "Oceania") %>% 
+         select(gdpBill, country), 
+         aes(x=gdpBill, fill=country)) + geom_histogram(binwidth=50)
+```
+
+![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-17-1.png)
+
+#### Boxplot
+
+The distribution of population of each continent in the '90s shown in a boxplot.
+
+``` r
+ggplot(gapminder %>% 
+         filter(year <= 1999, year >= 1990),
+       aes(x=continent, y=pop, colour=continent)) + 
+  geom_boxplot(outlier.alpha = 0.5, outlier.shape = 1) + scale_y_log10()
+```
+
+![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-18-1.png)
+
+#### Area chart
+
+The spread of GPD per capita each year in Algeria, Canada, Denmark, and India.
+
+``` r
+ggplot(gapminder %>% 
+         filter(country %in% c("Canada", "India", "Denmark", "Algeria")),
+       aes(x=year, y=gdpPercap, fill=country)) + geom_area(colour="black", alpha=0.6)
+```
+
+![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-19-1.png)
+
+I want to do more!
+------------------
+
+``` r
+filter(gapminder, country == c("Rwanda", "Afghanistan"))
+```
+
+    ## # A tibble: 12 x 6
+    ##        country continent  year lifeExp      pop gdpPercap
+    ##         <fctr>    <fctr> <int>   <dbl>    <int>     <dbl>
+    ##  1 Afghanistan      Asia  1957  30.332  9240934  820.8530
+    ##  2 Afghanistan      Asia  1967  34.020 11537966  836.1971
+    ##  3 Afghanistan      Asia  1977  38.438 14880372  786.1134
+    ##  4 Afghanistan      Asia  1987  40.822 13867957  852.3959
+    ##  5 Afghanistan      Asia  1997  41.763 22227415  635.3414
+    ##  6 Afghanistan      Asia  2007  43.828 31889923  974.5803
+    ##  7      Rwanda    Africa  1952  40.000  2534927  493.3239
+    ##  8      Rwanda    Africa  1962  43.000  3051242  597.4731
+    ##  9      Rwanda    Africa  1972  44.600  3992121  590.5807
+    ## 10      Rwanda    Africa  1982  46.218  5507565  881.5706
+    ## 11      Rwanda    Africa  1992  23.599  7290203  737.0686
+    ## 12      Rwanda    Africa  2002  43.413  7852401  785.6538
+
+The code above does not suceed in retrieving all the data for Afghanistan and Rwanda. The "==" operator does not work for more than one category where there is overlapping data (i.e. if Afghanistan and Rwanda share the same year, only one set of data will be retrieved).
+
+The "%in%" operator is used along with c(), to create a vector, allowing retrieval of all the data where both countries share the same element (i.e. year).
+
+``` r
+filter(gapminder, country %in% c("Rwanda", "Afghanistan"))
+```
+
+    ## # A tibble: 24 x 6
+    ##        country continent  year lifeExp      pop gdpPercap
+    ##         <fctr>    <fctr> <int>   <dbl>    <int>     <dbl>
+    ##  1 Afghanistan      Asia  1952  28.801  8425333  779.4453
+    ##  2 Afghanistan      Asia  1957  30.332  9240934  820.8530
+    ##  3 Afghanistan      Asia  1962  31.997 10267083  853.1007
+    ##  4 Afghanistan      Asia  1967  34.020 11537966  836.1971
+    ##  5 Afghanistan      Asia  1972  36.088 13079460  739.9811
+    ##  6 Afghanistan      Asia  1977  38.438 14880372  786.1134
+    ##  7 Afghanistan      Asia  1982  39.854 12881816  978.0114
+    ##  8 Afghanistan      Asia  1987  40.822 13867957  852.3959
+    ##  9 Afghanistan      Asia  1992  41.674 16317921  649.3414
+    ## 10 Afghanistan      Asia  1997  41.763 22227415  635.3414
+    ## # ... with 14 more rows
