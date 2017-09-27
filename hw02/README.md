@@ -1,6 +1,8 @@
 Homework 02 process
 ================
 
+The markdown file for the homework 02 submission is named [hw02\_gapminder.md](https://github.com/cheungamanda/STAT545-hw-cheung-amanda/blob/master/hw02/hw02_gapminder.md).
+
 ### Make a homework repo
 
 This part was fairly straightforward and I didn't encounter any difficulties.
