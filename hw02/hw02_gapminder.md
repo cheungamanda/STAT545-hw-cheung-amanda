@@ -232,7 +232,7 @@ range(gapminder$lifeExp)
 Histogram of life expectancy values to illustrate the spread and distribution.
 
 ``` r
-hist(gapminder$lifeExp)
+ggplot(gapminder, aes(x=lifeExp, fill=continent)) + geom_histogram(binwidth=10)
 ```
 
 ![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-11-1.png)
@@ -247,3 +247,37 @@ ggplot(gapminder, aes(x=lifeExp)) + geom_density(colour="blue", fill="blue", alp
 
 Explore various plot types
 --------------------------
+
+#### Scatterplot
+
+Scatterplot of year vs. life expectancy in Europe.
+
+``` r
+ggplot(filter(gapminder, continent == "Europe" ), aes(x=year, y=lifeExp, colour=country)) + geom_line() + geom_point()
+```
+
+![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-13-1.png)
+
+Scatterplot of population vs. life expectancy in the '80s and '90s in Africa, the Americas, and Asia.
+
+``` r
+ggplot(gapminder %>% 
+         filter(year <= 1999, year >= 1980, continent %in% c("Americas", "Africa", "Asia")) %>% 
+         select(continent, pop, lifeExp),
+         aes(x=pop, y=lifeExp, colour=continent)) + geom_point() + geom_smooth(se=FALSE, method="loess") + scale_x_log10()
+```
+
+![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-14-1.png)
+
+#### Frequency polygon
+
+Frequency polygon of life expectancy in China, Japan, Vietnam, and Thailand.
+
+``` r
+ggplot(gapminder %>%  
+       filter(continent == "Asia", country %in% c("China", "Japan", "Vietnam", "Thailand")) %>%
+       select(country, lifeExp), 
+       aes(x=lifeExp, colour=country)) + geom_freqpoly(binwidth=10)
+```
+
+![](hw02_gapminder_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-15-1.png)

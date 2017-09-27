@@ -121,7 +121,7 @@ range(gapminder$lifeExp)
 
 Histogram of life expectancy values to illustrate the spread and distribution.
 ```{r}
-hist(gapminder$lifeExp)
+ggplot(gapminder, aes(x=lifeExp, fill=continent)) + geom_histogram(binwidth=10)
 ```
 
 Density plot of life expectancy values to illustrate the spread and distribution.
@@ -130,3 +130,72 @@ ggplot(gapminder, aes(x=lifeExp)) + geom_density(colour="blue", fill="blue", alp
 ```
 
 ## Explore various plot types
+
+#### Scatterplot
+
+Scatterplot of year vs. life expectancy in Europe.
+```{r}
+ggplot(filter(gapminder, continent == "Europe" ), aes(x=year, y=lifeExp, colour=country)) + geom_line() + geom_point()
+```
+
+Scatterplot of population vs. life expectancy in the '80s and '90s in Africa, the Americas, and Asia.
+```{r}
+ggplot(gapminder %>% 
+         filter(year <= 1999, year >= 1980, continent %in% c("Americas", "Africa", "Asia")) %>% 
+         select(continent, pop, lifeExp),
+         aes(x=pop, y=lifeExp, colour=continent)) + geom_point() + geom_smooth(se=FALSE, method="loess") + scale_x_log10()
+```
+
+```{r}
+ggplot(gapminder, aes(x=gdpPercap, y=pop)) + scale_y_log10() + facet_wrap(~ continent) + geom_point(alpha=0.25) + geom_smooth(se=FALSE, method="loess", aes(colour=continent))
+```
+
+#### Frequency polygon
+
+Frequency polygon of life expectancy in China, Japan, Vietnam, and Thailand.
+```{r}
+ggplot(gapminder %>%  
+         filter(continent == "Asia", country %in% c("China", "Japan", "Vietnam", "Thailand")) %>%
+         select(country, lifeExp), 
+         aes(x=lifeExp, colour=country)) + geom_freqpoly(binwidth=10)
+```
+
+#### Histogram
+
+Histogram of GDP in billions (calculated by multiplying GPD per capita with population) in Oceania.
+```{r}
+ggplot(gapminder %>% 
+         mutate(gdpBill = (gdpPercap * pop)/1000000000) %>% 
+         filter(continent == "Oceania") %>% 
+         select(gdpBill, country), 
+         aes(x=gdpBill, fill=country)) + geom_histogram(binwidth=50)
+```
+
+#### Boxplot
+
+The distribution of population of each continent in the '90s shown in a boxplot. 
+```{r}
+ggplot(gapminder %>% 
+         filter(year <= 1999, year >= 1990),
+       aes(x=continent, y=pop, colour=continent)) + 
+  geom_boxplot(outlier.alpha = 0.5, outlier.shape = 1) + scale_y_log10()
+```
+
+#### Area chart
+
+The spread of GPD per capita each year in Algeria, Canada, Denmark, and India.   
+```{r}
+ggplot(gapminder %>% 
+         filter(country %in% c("Canada", "India", "Denmark", "Algeria")),
+       aes(x=year, y=gdpPercap, fill=country)) + geom_area(colour="black", alpha=0.6)
+```
+
+## I want to do more!
+```{r}
+filter(gapminder, country == c("Rwanda", "Afghanistan"))
+```
+
+```{r}
+filter(gapminder, country %in% c("Rwanda", "Afghanistan"))
+```
+
