@@ -5,7 +5,7 @@ date: "10/1/2017"
 output: github_document
 ---
 
-#### STAT545 Homework 03
+## STAT545 Homework 03
 
 Exploration and manipulation of the Gapminder dataset using dplyr and ggplot2.
 
@@ -14,5 +14,41 @@ Load gapminder, and dplyr and ggplot2 via the tidyverse meta-package.
 ```{r}
 library(gapminder)
 library(tidyverse)
+```
+
+## Task 1: Get the maximum and minimum of GDP per capita for all continents
+
+#### Table 1: Maximum and minimum GDP per capita for all continents.
+```{r results= 'asis'}
+knitr::kable(gapminder %>%
+               group_by(continent) %>% 
+               summarize(maximum_gdpPercap = max(gdpPercap),
+                         minimum_gdpPercap = min(gdpPercap)))
+```
+
+#### Figure 1: Grouped bar plot of maximum and minimum GDP per capita for all continents.
+
+Load reshape2 package.
+```{r}
+library(reshape2)
+```
+Melt data of interest using `melt` function.
+```{r}
+gdp_melt = melt(gapminder %>%
+       group_by(continent) %>% 
+       summarize(maximum_gdpPercap = max(gdpPercap),
+                 minimum_gdpPercap = min(gdpPercap)))
+```
+
+Grouped bar plot of maximum and minimum GDP per capita for all continents
+```{r}
+ggplot(gdp_melt, aes(x=continent, y=value, fill=variable)) +
+  geom_bar(position="dodge", stat="identity") + 
+  theme_bw() +
+  theme(legend.position="top", legend.title = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_fill_discrete(labels=c("Maximum", "Minimum")) +
+  labs(x="Continent", y="GDP per capita") +
+  ggtitle("Maximum and minimum GDP per capita for all continents")
 ```
 
