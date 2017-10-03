@@ -52,3 +52,67 @@ ggplot(gdp_melt, aes(x=continent, y=value, fill=variable)) +
   ggtitle("Maximum and minimum GDP per capita for all continents")
 ```
 
+## Task 2: Look at the spread of GDP per capita within the continents.
+
+#### Table 1: Maximum, minimum, median, average, and standard deviation of GDP per capita for all continents.
+```{r results= 'asis'}
+knitr::kable(gapminder %>%
+               group_by(continent) %>% 
+               summarize(maximum_gdpPercap = max(gdpPercap),
+                         minimum_gdpPercap = min(gdpPercap),
+                         median_gdpPercap = median(gdpPercap),
+                         average_gdpPercap = mean(gdpPercap),
+                         standard_deviation_gdpPercap = sd(gdpPercap)))
+```
+
+#### Figure 1: Distribution of GDP per capita within each continent using histograms.
+```{r}
+ggplot(gapminder, aes(x=gdpPercap)) +
+  facet_wrap(~ continent) +
+  geom_histogram(aes(fill=continent), bins=20) +
+  scale_x_log10() +
+  theme_bw() +
+  labs(title="Distribution of GDP per capita") +
+  theme(legend.position="bottom",
+        plot.title=element_text(hjust=0.5),
+        strip.background = element_rect(fill="lightcyan"),
+        strip.text = element_text(size=12, face="bold"))
+```
+
+#### Figure 2: Box plot of GDP per capita distribution.
+```{r}
+ggplot(gapminder, aes(x=continent, y=gdpPercap)) +
+  geom_boxplot(aes(colour=continent), outlier.shape=1) +
+  theme_bw() +
+  labs(title="Distribution of GDP per capita") +
+  theme(plot.title=element_text(hjust=0.5))
+```
+
+#### Figure 3: Violin plot of GDP per capita distribution.
+```{r}
+ggplot(gapminder, aes(x=continent, y=gdpPercap)) +
+  geom_violin(scale = "area", aes(fill=continent)) +
+  theme_bw() +
+  labs(title="Distribution of GDP per capita") +
+  theme(plot.title=element_text(hjust=0.5))
+```
+
+#### Figure 4: Distribution of GDP per capita within each continent using frequency plots.
+```{r}
+ggplot(gapminder, aes(x=gdpPercap)) +
+  facet_grid(~ continent) +
+  geom_freqpoly(aes(colour=continent), bins=20) +
+  scale_x_log10() +
+  theme_bw() +
+  labs(title="Distribution of GDP per capita") +
+  theme(legend.position = "bottom",
+        plot.title=element_text(hjust=0.5),
+        strip.background = element_rect(fill="pink"),
+        strip.text = element_text(size=12, face="bold"))
+```
+
+
+
+
+
+

@@ -90,3 +90,84 @@ ggplot(gdp_melt, aes(x=continent, y=value, fill=variable)) +
 ```
 
 ![](hw03_dplyr-ggplot2_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-5-1.png)
+
+Task 2: Look at the spread of GDP per capita within the continents.
+-------------------------------------------------------------------
+
+#### Table 1: Maximum, minimum, median, average, and standard deviation of GDP per capita for all continents.
+
+``` r
+knitr::kable(gapminder %>%
+               group_by(continent) %>% 
+               summarize(maximum_gdpPercap = max(gdpPercap),
+                         minimum_gdpPercap = min(gdpPercap),
+                         median_gdpPercap = median(gdpPercap),
+                         average_gdpPercap = mean(gdpPercap),
+                         standard_deviation_gdpPercap = sd(gdpPercap)))
+```
+
+| continent |  maximum\_gdpPercap|  minimum\_gdpPercap|  median\_gdpPercap|  average\_gdpPercap|  standard\_deviation\_gdpPercap|
+|:----------|-------------------:|-------------------:|------------------:|-------------------:|-------------------------------:|
+| Africa    |            21951.21|            241.1659|           1192.138|            2193.755|                        2827.930|
+| Americas  |            42951.65|           1201.6372|           5465.510|            7136.110|                        6396.764|
+| Asia      |           113523.13|            331.0000|           2646.787|            7902.150|                       14045.373|
+| Europe    |            49357.19|            973.5332|          12081.749|           14469.476|                        9355.213|
+| Oceania   |            34435.37|          10039.5956|          17983.304|           18621.609|                        6358.983|
+
+#### Figure 1: Distribution of GDP per capita within each continent using histograms.
+
+``` r
+ggplot(gapminder, aes(x=gdpPercap)) +
+  facet_wrap(~ continent) +
+  geom_histogram(aes(fill=continent), bins=20) +
+  scale_x_log10() +
+  theme_bw() +
+  labs(title="Distribution of GDP per capita") +
+  theme(legend.position="bottom",
+        plot.title=element_text(hjust=0.5),
+        strip.background = element_rect(fill="lightcyan"),
+        strip.text = element_text(size=12, face="bold"))
+```
+
+![](hw03_dplyr-ggplot2_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-7-1.png)
+
+#### Figure 2: Box plot of GDP per capita distribution.
+
+``` r
+ggplot(gapminder, aes(x=continent, y=gdpPercap)) +
+  geom_boxplot(aes(colour=continent), outlier.shape=1) +
+  theme_bw() +
+  labs(title="Distribution of GDP per capita") +
+  theme(plot.title=element_text(hjust=0.5))
+```
+
+![](hw03_dplyr-ggplot2_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-8-1.png)
+
+#### Figure 3: Violin plot of GDP per capita distribution.
+
+``` r
+ggplot(gapminder, aes(x=continent, y=gdpPercap)) +
+  geom_violin(scale = "area", aes(fill=continent)) +
+  theme_bw() +
+  labs(title="Distribution of GDP per capita") +
+  theme(plot.title=element_text(hjust=0.5))
+```
+
+![](hw03_dplyr-ggplot2_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-1.png)
+
+#### Figure 4: Distribution of GDP per capita within each continent using frequency plots.
+
+``` r
+ggplot(gapminder, aes(x=gdpPercap)) +
+  facet_grid(~ continent) +
+  geom_freqpoly(aes(colour=continent), bins=20) +
+  scale_x_log10() +
+  theme_bw() +
+  labs(title="Distribution of GDP per capita") +
+  theme(legend.position = "bottom",
+        plot.title=element_text(hjust=0.5),
+        strip.background = element_rect(fill="pink"),
+        strip.text = element_text(size=12, face="bold"))
+```
+
+![](hw03_dplyr-ggplot2_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-10-1.png)
