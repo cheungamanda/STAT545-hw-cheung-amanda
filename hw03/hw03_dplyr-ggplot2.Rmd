@@ -70,9 +70,11 @@ knitr::kable(gapminder %>%
 ggplot(gapminder, aes(x=gdpPercap)) +
   facet_wrap(~ continent) +
   geom_histogram(aes(fill=continent), bins=20) +
-  scale_x_log10() +
+  scale_x_log10("GDP per capita") +
   theme_bw() +
   labs(title="Distribution of GDP per capita") +
+  scale_y_continuous("Frequency") +
+  scale_color_discrete("Continent") +
   theme(legend.position="bottom",
         plot.title=element_text(hjust=0.5),
         strip.background = element_rect(fill="lightcyan"),
@@ -85,6 +87,9 @@ ggplot(gapminder, aes(x=continent, y=gdpPercap)) +
   geom_boxplot(aes(colour=continent), outlier.shape=1) +
   theme_bw() +
   labs(title="Distribution of GDP per capita") +
+  scale_x_discrete("Continent") +
+  scale_y_continuous("GDP per capita") +
+  scale_color_discrete("Continent") +
   theme(plot.title=element_text(hjust=0.5))
 ```
 
@@ -94,6 +99,9 @@ ggplot(gapminder, aes(x=continent, y=gdpPercap)) +
   geom_violin(scale = "area", aes(fill=continent)) +
   theme_bw() +
   labs(title="Distribution of GDP per capita") +
+  scale_x_discrete("Continent") +
+  scale_y_continuous("GDP per capita") +
+  scale_color_discrete("Continent") +
   theme(plot.title=element_text(hjust=0.5))
 ```
 
@@ -102,17 +110,183 @@ ggplot(gapminder, aes(x=continent, y=gdpPercap)) +
 ggplot(gapminder, aes(x=gdpPercap)) +
   facet_grid(~ continent) +
   geom_freqpoly(aes(colour=continent), bins=20) +
-  scale_x_log10() +
+  scale_x_log10("GDP per capita") +
   theme_bw() +
   labs(title="Distribution of GDP per capita") +
+  scale_y_continuous("Frequency") +
+  scale_color_discrete("Continent") +
   theme(legend.position = "bottom",
         plot.title=element_text(hjust=0.5),
         strip.background = element_rect(fill="pink"),
         strip.text = element_text(size=12, face="bold"))
 ```
 
+## Task 3: Compute a trimmed mean of life expectancy for different years.
+
+#### Table 1: 20% Trimmed mean of life expectancy for different years.
+
+```{r results= 'asis'}
+knitr::kable(gapminder %>%
+               group_by(year) %>%
+               summarize(trimmed_mean=round(mean(lifeExp, trim=0.20, na.rm=FALSE), digits=1)))
+```
+
+#### Figure 1: 20% Trimmed mean life expectancy for different years.
+
+```{r}
+ggplot(gapminder %>%
+         group_by(year) %>%
+         summarize(trimmed_mean=mean(lifeExp, trim=0.20, na.rm=FALSE)),
+       aes(x=year, y=trimmed_mean)) +
+  geom_point() +
+  geom_smooth(se=FALSE, method="loess") +
+  theme_bw() +
+  labs(title="Trimmed Mean Life Expectancy by Year") +
+  scale_x_continuous("Year") +
+  scale_y_continuous("Trimmed Mean Life Expectancy") +
+  theme(plot.title=element_text(hjust=0.5))
+```
+
+## Task 4: How is life expectancy changing over time on different continents?
+
+#### Table 1: Maximum, minimum, and trimmed mean life expectancy for each continent over time.
+```{r results= 'asis'}
+knitr::kable(gapminder %>%
+               select(continent, year, lifeExp) %>% 
+               group_by(continent, year) %>%
+               summarize(max_lifeExp=max(lifeExp),
+                         min_lifeExp=min(lifeExp),
+                         trimmed_mean=round(mean(lifeExp, trim=0.20, na.rm=FALSE), digit=1)))
+```
 
 
+#### Figure 1: Trends in life expectancy
+```{r}
+ggplot(gapminder, aes(x=year, y=lifeExp)) +
+  geom_point(alpha=0.2, aes(colour=continent)) +
+  geom_smooth(se=FALSE, method="loess", aes(colour=continent)) +
+  theme_bw() +
+  labs(title="Trends in Life Expectancy") +
+  scale_x_continuous("Year") +
+  scale_y_continuous("Life Expectancy") +
+  scale_color_discrete("Continent") +
+  theme(legend.position="top",
+        plot.title=element_text(hjust=0.5))
+```
 
 
+#### Figure 2: Trends in life expectancy. 
+```{r}
+ggplot(gapminder, aes(x=year, y=lifeExp, group=country)) +
+  facet_wrap(~ continent) +
+  geom_line(alpha=0.3, aes(colour=continent)) +
+  theme_bw() +
+  labs(title="Trends in Life Expectancy") +
+  scale_x_continuous("Year") +
+  scale_y_continuous("Life Expectancy") +
+  scale_color_discrete("Continent") +
+  theme(legend.position = "bottom",
+        plot.title=element_text(hjust=0.5),
+        strip.background = element_rect(fill="peachpuff"),
+        strip.text = element_text(size=12, face="bold"),
+        axis.text.x=element_text(angle=90))
+```
+
+
+## Task 5: Report the absolute and/or relative abundance of countries with low life expectancy over time by continent: Compute some measure of worldwide life expectancy – you decide – a mean or median or some other quantile or perhaps your current age. Then determine how many countries on each continent have a life expectancy less than this benchmark, for each year.
+
+#### Table 1:
+Mean life expectancy
+```{r}
+mean(gapminder$lifeExp)
+```
+
+```{r results= 'asis'}
+knitr::kable(gapminder %>%
+               select(country, continent, year, lifeExp) %>%
+               filter(lifeExp < mean(lifeExp)) %>%
+               group_by(continent, year) %>%
+               summarize(countries_below_mean_lifeExp=n_distinct(country)))
+```
+
+#### Figure 1: Number of countries below mean life expectancy.
+```{r}
+low_lifeExp <- gapminder %>%
+  select(country, continent, year, lifeExp) %>%
+  filter(lifeExp < mean(lifeExp)) %>%
+  group_by(continent, year) %>%
+  summarize(countries_below_mean_lifeExp=n_distinct(country))
+
+ggplot(low_lifeExp, aes(x=year, y=countries_below_mean_lifeExp)) +
+  geom_line(aes(colour=continent)) +
+  facet_wrap(~ continent) +
+  theme_bw() +
+  labs(title="Number of countries below mean life expectancy") +
+  scale_x_continuous("Year") +
+  scale_y_continuous("Number of countries") +
+  scale_color_discrete("Continent") +
+  theme(legend.position = "bottom",
+        plot.title=element_text(hjust=0.5),
+        strip.background = element_rect(fill="lightskyblue1"),
+        strip.text = element_text(size=12, face="bold"))
+```
+
+## Task 6: Find countries with interesting stories! Which countries show the greatest change in life expectancy from 1990 to 2000?
+
+#### Table 1: Top 10 countries showing the greatest positive change in life expectancy from 1990 to 2000.
+```{r results= 'asis'}
+pos_change <- gapminder %>%
+               filter(year == 1992 | year == 2002) %>% 
+               group_by(country) %>%
+               arrange(year) %>% 
+               mutate(lifeExp_change=lifeExp[year==2002] - lifeExp[year==1992]) %>% 
+               arrange(desc(lifeExp_change)) %>%
+               filter(year == 2002) %>% 
+               select(country, continent, lifeExp_change) %>% 
+               head(10)
+
+knitr::kable(pos_change)
+              
+```
+
+#### Table 2: Top 10 countries showing the greatest negative change in life expectancy from 1990 to 2000.
+
+```{r results= 'asis'}
+neg_change <- (gapminder %>%
+                 filter(year == 1992 | year == 2002) %>% 
+                 group_by(country) %>%
+                 arrange(year) %>% 
+                 mutate(lifeExp_change=lifeExp[year==2002] - lifeExp[year==1992]) %>% 
+                 arrange(lifeExp_change)) %>%
+                 filter(year == 2002) %>% 
+                 select(country, continent, lifeExp_change) %>% 
+                 head(10)
+
+knitr::kable(neg_change)
+```
+
+#### Figure 1: 
+```{r}
+ggplot(pos_change, aes(x=country, y=lifeExp_change)) +
+  geom_col(aes(fill=continent)) +
+  theme_bw() +
+  labs(title="Changes in life expectancy from 1992 to 2002") +
+  scale_x_discrete("Country") +
+  scale_y_continuous("Change in life expectancy") +
+  theme(legend.position="top",
+        plot.title=element_text(hjust=0.5))
+```
+
+#### Figure 1: 
+```{r}
+ggplot(neg_change, aes(x=country, y=lifeExp_change)) +
+  geom_col(aes(fill=continent)) +
+  theme_bw() +
+  labs(title="Changes in life expectancy from 1992 to 2002") +
+  scale_x_discrete("Country") +
+  scale_y_continuous("Change in life expectancy") +
+  theme(legend.position="top",
+        plot.title=element_text(hjust=0.5),
+        axis.text.x=element_text(angle=45))
+```
 
