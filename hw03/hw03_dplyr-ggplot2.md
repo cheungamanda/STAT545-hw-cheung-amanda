@@ -343,7 +343,7 @@ ggplot(gapminder, aes(x=year, y=lifeExp, group=country)) +
 Task 5: Report the absolute and/or relative abundance of countries with low life expectancy over time by continent: Compute some measure of worldwide life expectancy – you decide – a mean or median or some other quantile or perhaps your current age. Then determine how many countries on each continent have a life expectancy less than this benchmark, for each year.
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-#### Table 1:
+#### Table 1: Number of countries below mean life expectancy.
 
 Mean life expectancy
 
@@ -490,7 +490,7 @@ knitr::kable(neg_change)
 | Central African Republic | Africa    |           -6.088|
 | Cote d'Ivoire            | Africa    |           -5.212|
 
-#### Figure 1:
+#### Figure 1: Positive changes in life expectancy from 1992 to 2002
 
 ``` r
 ggplot(pos_change, aes(x=country, y=lifeExp_change)) +
@@ -505,7 +505,7 @@ ggplot(pos_change, aes(x=country, y=lifeExp_change)) +
 
 ![](hw03_dplyr-ggplot2_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-21-1.png)
 
-#### Figure 1:
+#### Figure 2: Negative changes in life expectancy from 1992 to 2002
 
 ``` r
 ggplot(neg_change, aes(x=country, y=lifeExp_change)) +
