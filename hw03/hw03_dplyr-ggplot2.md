@@ -432,7 +432,7 @@ ggplot(low_lifeExp, aes(x=year, y=countries_below_mean_lifeExp)) +
 Task 6: Find countries with interesting stories! Which countries show the greatest change in life expectancy from 1990 to 2000?
 -------------------------------------------------------------------------------------------------------------------------------
 
-#### Table 1: Top 10 countries showing the greatest positive change in life expectancy from 1990 to 2000.
+#### Table 1: Top 10 countries showing the greatest positive change in life expectancy from 1992 to 2002.
 
 ``` r
 pos_change <- gapminder %>%
@@ -461,7 +461,7 @@ knitr::kable(pos_change)
 | Gambia     | Africa    |            5.397|
 | Vietnam    | Asia      |            5.355|
 
-#### Table 2: Top 10 countries showing the greatest negative change in life expectancy from 1990 to 2000.
+#### Table 2: Top 10 countries showing the greatest negative change in life expectancy from 1992 to 2002.
 
 ``` r
 neg_change <- (gapminder %>%
