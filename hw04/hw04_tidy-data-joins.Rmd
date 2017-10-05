@@ -1,0 +1,35 @@
+---
+title: 'Homework 04: Tidy data and joins'
+author: "Amanda Cheung"
+output: github_document
+---
+
+Putting my data wrangling skills to the test!
+
+#### Gapminder and tidyveryse
+
+Load gapminder and tidyverse.
+
+```{r}
+suppressPackageStartupMessages(library(gapminder))
+suppressPackageStartupMessages(library(tidyverse))
+```
+
+## General data reshaping and relationship to aggregation
+
+**Problem:** You have data in one “shape”, but you wish it were in another...
+
+**Solution:** Reshape your data! Use `gather()` and `spread()` from `tidyr` for simple reshaping!
+
+## Activity 1: `tidyr` cheatsheet
+
+A minimal cheatsheet. Check out the [R studio verison](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf), for a more comprehensive one.
+
+#### Main functions: `gather()` and `spread()`
+
+| `tidyr` function |             action             |
+|------------------|--------------------------------|
+| `gather()`       | long format :arrow_up_down:    |
+| `spready()`      | wide format :left_right_arrow: |
+
+
