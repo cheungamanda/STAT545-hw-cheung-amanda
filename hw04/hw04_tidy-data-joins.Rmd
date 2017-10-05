@@ -23,13 +23,53 @@ suppressPackageStartupMessages(library(tidyverse))
 
 ## Activity 1: `tidyr` cheatsheet
 
-A minimal cheatsheet. Check out the [R studio verison](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf), for a more comprehensive one.
+A minimal cheatsheet. Check out the [R studio version](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf), for a more comprehensive one.
 
-#### Main functions: `gather()` and `spread()`
+### Main functions: `gather()` and `spread()`
 
 | `tidyr` function |             action             |
 |------------------|--------------------------------|
 | `gather()`       | long format :arrow_up_down:    |
 | `spready()`      | wide format :left_right_arrow: |
+
+### Example data
+
+```{r results= 'asis'}
+student <- c('A', 'B', 'C')
+biology <- c(88, 90, 75)
+chemistry <- c(95, 85, 90)
+french <- c(83, 77, 85) 
+
+ex.data <- data.frame(student, biology, chemistry, french) 
+
+knitr::kable(ex.data)
+```
+
+
+### `gather()`
+
+Gather columns into rows.
+
+![](ex_gather.png)
+
+```{r results= 'asis'}
+knitr::kable(ex.data %>% 
+               gather(key=subject, value=grade, biology:french))
+```
+
+
+### `spread()`
+
+Spread rows into columns.
+
+![](ex_spread.png)
+
+```{r results= 'asis'}
+knitr::kable(ex.data %>% 
+               gather(key=subject, value=grade, biology:french) %>% 
+               spread(key=subject, value=grade))
+```
+
+
 
 
