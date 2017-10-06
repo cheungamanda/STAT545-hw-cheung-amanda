@@ -30,7 +30,7 @@ A minimal cheatsheet. Check out the [R studio version](https://www.rstudio.com/w
 | `tidyr` function | action                           |
 |------------------|----------------------------------|
 | `gather()`       | long format :arrow\_up\_down:    |
-| `spready()`      | wide format :left\_right\_arrow: |
+| `spread()`       | wide format :left\_right\_arrow: |
 
 ### Example data
 
@@ -74,6 +74,13 @@ knitr::kable(ex.data %>%
 | B       | french    |     77|
 | C       | french    |     85|
 
+``` r
+## Alternative ways to call gather()
+## gather(subject, grade, biology:french)
+## gather(subject, grade, -c(student))
+## gather(subject, grade, biology, chemistry, french)
+```
+
 ### `spread()`
 
 Spread rows into columns.
@@ -91,3 +98,77 @@ knitr::kable(ex.data %>%
 | A       |       88|         95|      83|
 | B       |       90|         85|      77|
 | C       |       75|         90|      85|
+
+Activity 2: Exploring life expectancy
+-------------------------------------
+
+### Tibble
+
+A tibble with one row per year and columns for life expectancy for two or more countries.
+
+``` r
+lifeExp.tbl <- gapminder %>%
+               filter(country %in% c('Australia', 'Canada', 'Denmark')) %>% 
+               select(year, country, lifeExp) %>% 
+               gather(measure, value, lifeExp)
+
+knitr::kable(lifeExp.tbl)
+```
+
+|  year| country   | measure |   value|
+|-----:|:----------|:--------|-------:|
+|  1952| Australia | lifeExp |  69.120|
+|  1957| Australia | lifeExp |  70.330|
+|  1962| Australia | lifeExp |  70.930|
+|  1967| Australia | lifeExp |  71.100|
+|  1972| Australia | lifeExp |  71.930|
+|  1977| Australia | lifeExp |  73.490|
+|  1982| Australia | lifeExp |  74.740|
+|  1987| Australia | lifeExp |  76.320|
+|  1992| Australia | lifeExp |  77.560|
+|  1997| Australia | lifeExp |  78.830|
+|  2002| Australia | lifeExp |  80.370|
+|  2007| Australia | lifeExp |  81.235|
+|  1952| Canada    | lifeExp |  68.750|
+|  1957| Canada    | lifeExp |  69.960|
+|  1962| Canada    | lifeExp |  71.300|
+|  1967| Canada    | lifeExp |  72.130|
+|  1972| Canada    | lifeExp |  72.880|
+|  1977| Canada    | lifeExp |  74.210|
+|  1982| Canada    | lifeExp |  75.760|
+|  1987| Canada    | lifeExp |  76.860|
+|  1992| Canada    | lifeExp |  77.950|
+|  1997| Canada    | lifeExp |  78.610|
+|  2002| Canada    | lifeExp |  79.770|
+|  2007| Canada    | lifeExp |  80.653|
+|  1952| Denmark   | lifeExp |  70.780|
+|  1957| Denmark   | lifeExp |  71.810|
+|  1962| Denmark   | lifeExp |  72.350|
+|  1967| Denmark   | lifeExp |  72.960|
+|  1972| Denmark   | lifeExp |  73.470|
+|  1977| Denmark   | lifeExp |  74.690|
+|  1982| Denmark   | lifeExp |  74.630|
+|  1987| Denmark   | lifeExp |  74.800|
+|  1992| Denmark   | lifeExp |  75.330|
+|  1997| Denmark   | lifeExp |  76.110|
+|  2002| Denmark   | lifeExp |  77.180|
+|  2007| Denmark   | lifeExp |  78.332|
+
+### Scatterplot
+
+A scatterplot of life expectancy for one country against that of another using the new data shape created above.
+
+``` r
+ggplot(lifeExp.tbl, aes(x=year, y=value)) + 
+  geom_point(aes(colour=country)) +
+  geom_smooth(se=FALSE, method='loess', aes(colour=country)) +
+  theme_bw() +
+  labs(title='Life Expectancy Trends') +
+  scale_x_continuous('Year') +
+  scale_y_continuous('Life Expectancy') +
+  scale_color_discrete("Country") +
+  theme(legend.position="top",
+        plot.title=element_text(hjust=0.5))
+```
+
+![](hw04_tidy-data-joins_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-6-1.png)

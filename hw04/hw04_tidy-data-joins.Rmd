@@ -30,7 +30,7 @@ A minimal cheatsheet. Check out the [R studio version](https://www.rstudio.com/w
 | `tidyr` function |             action             |
 |------------------|--------------------------------|
 | `gather()`       | long format :arrow_up_down:    |
-| `spready()`      | wide format :left_right_arrow: |
+| `spread()`       | wide format :left_right_arrow: |
 
 ### Example data
 
@@ -55,6 +55,11 @@ Gather columns into rows.
 ```{r results= 'asis'}
 knitr::kable(ex.data %>% 
                gather(key=subject, value=grade, biology:french))
+
+## Alternative ways to call gather()
+## gather(subject, grade, biology:french)
+## gather(subject, grade, -c(student))
+## gather(subject, grade, biology, chemistry, french)
 ```
 
 
@@ -71,5 +76,36 @@ knitr::kable(ex.data %>%
 ```
 
 
+## Activity 2: Exploring life expectancy
+
+### Tibble
+
+A tibble with one row per year and columns for life expectancy for two or more countries.
+
+```{r results= 'asis'}
+lifeExp.tbl <- gapminder %>%
+               filter(country %in% c('Australia', 'Canada', 'Denmark')) %>% 
+               select(year, country, lifeExp) %>% 
+               gather(measure, value, lifeExp)
+
+knitr::kable(lifeExp.tbl)
+```
+
+### Scatterplot
+
+A scatterplot of life expectancy for one country against that of another using the new data shape created above. 
+
+```{r}
+ggplot(lifeExp.tbl, aes(x=year, y=value)) + 
+  geom_point(aes(colour=country)) +
+  geom_smooth(se=FALSE, method='loess', aes(colour=country)) +
+  theme_bw() +
+  labs(title='Life Expectancy Trends') +
+  scale_x_continuous('Year') +
+  scale_y_continuous('Life Expectancy') +
+  scale_color_discrete("Country") +
+  theme(legend.position="top",
+        plot.title=element_text(hjust=0.5))
+```
 
 
