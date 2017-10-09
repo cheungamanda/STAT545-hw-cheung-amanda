@@ -53,7 +53,7 @@ Gather columns into rows.
 ![](ex_gather.png)
 
 ```{r results= 'asis'}
-knitr::kable(ex.data %>% 
+knitr::kable(ex.data %>%
                gather(key=subject, value=grade, biology:french))
 
 ## Alternative ways to call gather()
@@ -70,7 +70,7 @@ Spread rows into columns.
 ![](ex_spread.png)
 
 ```{r results= 'asis'}
-knitr::kable(ex.data %>% 
+knitr::kable(ex.data %>%
                gather(key=subject, value=grade, biology:french) %>% 
                spread(key=subject, value=grade))
 ```
@@ -78,34 +78,75 @@ knitr::kable(ex.data %>%
 
 ## Activity 2: Exploring life expectancy
 
-### Tibble
-
-A tibble with one row per year and columns for life expectancy for two or more countries.
+### Tibble: One row per year and columns for life expectancy for two or more countries
 
 ```{r results= 'asis'}
 lifeExp.tbl <- gapminder %>%
-               filter(country %in% c('Australia', 'Canada', 'Denmark')) %>% 
-               select(year, country, lifeExp) %>% 
-               gather(measure, value, lifeExp)
+  filter(country %in% c('Australia', 'Canada', 'Denmark')) %>% 
+  select(year, country, lifeExp) %>% 
+  spread(country, lifeExp)
 
 knitr::kable(lifeExp.tbl)
 ```
 
-### Scatterplot
-
-A scatterplot of life expectancy for one country against that of another using the new data shape created above. 
+### Scatterplot: Life expectancy for one country against that of another using the new data shape created above
 
 ```{r}
-ggplot(lifeExp.tbl, aes(x=year, y=value)) + 
-  geom_point(aes(colour=country)) +
-  geom_smooth(se=FALSE, method='loess', aes(colour=country)) +
+ggplot(lifeExp.tbl, aes(x=Canada, y=Australia)) + 
+  geom_point(aes(colour=year)) +
   theme_bw() +
-  labs(title='Life Expectancy Trends') +
-  scale_x_continuous('Year') +
-  scale_y_continuous('Life Expectancy') +
-  scale_color_discrete("Country") +
-  theme(legend.position="top",
-        plot.title=element_text(hjust=0.5))
+  labs(title='Canada vs. Australia Life Expectancy Trends') +
+  scale_color_continuous("Year") +
+  theme(plot.title=element_text(hjust=0.5))
 ```
 
+```{r}
+ggplot(lifeExp.tbl, aes(x=Canada, y=Denmark)) + 
+  geom_point(aes(colour=year)) +
+  theme_bw() +
+  labs(title='Canada vs. Denmark Life Expectancy Trends') +
+  scale_color_continuous("Year") +
+  theme(plot.title=element_text(hjust=0.5))
+```
+
+```{r}
+ggplot(lifeExp.tbl, aes(x=Australia, y=Denmark)) + 
+  geom_point(aes(colour=year)) +
+  theme_bw() +
+  labs(title='Australia vs. Denmark Life Expectancy Trends') +
+  scale_color_continuous("Year") +
+  theme(plot.title=element_text(hjust=0.5))
+```
+
+## Activity 3: Maximum life expectancy
+
+### Tibble: Maximum life expectancy for all possible combinations of continent and year. One row per year and one variable for each continent.
+
+```{r results= 'asis'}
+maxlifeExp.tbl <- gapminder %>%
+  group_by(year, continent) %>%
+  summarize(maxlifeExp = max(lifeExp)) %>%
+  spread(continent, maxlifeExp) %>%
+  arrange(year)
+
+knitr::kable(maxlifeExp.tbl)
+```
+
+### Plot???
+
+
+## Activity 4: 
+
+```{r results= 'asis'}
+europe.tbl <- gapminder %>%
+  filter(continent == "Europe") %>%
+  select(year, country, lifeExp) %>%
+  group_by(year) %>%
+  filter(min_rank(desc(lifeExp)) < 2 | min_rank(lifeExp) < 2) %>% 
+  arrange(year) %>%
+  spread(country, lifeExp)
+
+knitr::kable(europe.tbl)
+  
+```
 
