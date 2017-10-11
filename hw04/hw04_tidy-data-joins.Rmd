@@ -35,6 +35,7 @@ A minimal cheatsheet. Check out the [R studio version](https://www.rstudio.com/w
 ### Example data
 
 ```{r results= 'asis'}
+## Creating a data frame about students' grades
 student <- c('A', 'B', 'C')
 biology <- c(88, 90, 75)
 chemistry <- c(95, 85, 90)
@@ -84,7 +85,7 @@ knitr::kable(ex.data %>%
 lifeExp.tbl <- gapminder %>%
   filter(country %in% c('Australia', 'Canada', 'Denmark')) %>% 
   select(year, country, lifeExp) %>% 
-  spread(country, lifeExp)
+  spread(country, lifeExp) ## Spread rows into columns of country and their respective life expectancy
 
 knitr::kable(lifeExp.tbl)
 ```
@@ -93,28 +94,33 @@ knitr::kable(lifeExp.tbl)
 
 ```{r}
 ggplot(lifeExp.tbl, aes(x=Canada, y=Australia)) + 
-  geom_point(aes(colour=year)) +
+  geom_point(aes(colour=factor(year))) +
+  geom_abline(alpha=0.25) +
   theme_bw() +
   labs(title='Canada vs. Australia Life Expectancy Trends') +
-  scale_color_continuous("Year") +
+  scale_color_discrete("Year") +
   theme(plot.title=element_text(hjust=0.5))
 ```
 
+The life expectancy between Canada and Australia are quite similar. The line where life expectancy is the same for both countries is showed. Points above this line indicate the country on the y-axis (Australia) has a higher life expectancy than the country on the x-axis (Canada) at a specific point in time (and vice versa). 
+
 ```{r}
 ggplot(lifeExp.tbl, aes(x=Canada, y=Denmark)) + 
-  geom_point(aes(colour=year)) +
+  geom_point(aes(colour=factor(year))) +
+  geom_abline(alpha=0.25) +
   theme_bw() +
   labs(title='Canada vs. Denmark Life Expectancy Trends') +
-  scale_color_continuous("Year") +
+  scale_color_discrete("Year") +
   theme(plot.title=element_text(hjust=0.5))
 ```
 
 ```{r}
 ggplot(lifeExp.tbl, aes(x=Australia, y=Denmark)) + 
-  geom_point(aes(colour=year)) +
+  geom_point(aes(colour=factor(year))) +
+  geom_abline(alpha=0.25) +
   theme_bw() +
   labs(title='Australia vs. Denmark Life Expectancy Trends') +
-  scale_color_continuous("Year") +
+  scale_color_discrete("Year") +
   theme(plot.title=element_text(hjust=0.5))
 ```
 
@@ -132,21 +138,175 @@ maxlifeExp.tbl <- gapminder %>%
 knitr::kable(maxlifeExp.tbl)
 ```
 
-### Plot???
+### Scatterplot: Life expectancy for one continent against that of another using the new data shape
 
+It is easier to make a scatterplot comparing one continent against another with the new data shape.   
 
-## Activity 4: 
-
-```{r results= 'asis'}
-europe.tbl <- gapminder %>%
-  filter(continent == "Europe") %>%
-  select(year, country, lifeExp) %>%
-  group_by(year) %>%
-  filter(min_rank(desc(lifeExp)) < 2 | min_rank(lifeExp) < 2) %>% 
-  arrange(year) %>%
-  spread(country, lifeExp)
-
-knitr::kable(europe.tbl)
-  
+```{r}
+ggplot(maxlifeExp.tbl, aes(x=Africa, y=Europe)) + 
+  geom_point(aes(colour=factor(year))) +
+  geom_abline(alpha=0.25) +
+  theme_bw() +
+  labs(title='Africa vs. Europe Life Expectancy Trends') +
+  scale_color_discrete("Year") +
+  theme(plot.title=element_text(hjust=0.5))
 ```
 
+Europe has a higher life expectancy than Africa. 
+
+```{r}
+ggplot(maxlifeExp.tbl, aes(x=Asia, y=Americas)) + 
+  geom_point(aes(colour=factor(year))) +
+  geom_abline(alpha=0.25) +
+  theme_bw() +
+  labs(title='Asia vs. Americas Life Expectancy Trends') +
+  scale_color_discrete("Year") +
+  theme(plot.title=element_text(hjust=0.5))
+```
+
+The life expectancy in Asia becomes greater than the Americas over time. 
+
+## Activity 4: A table giving the country with both the lowest and highest life expectancy for all continents and reshape it so you have one row per year
+
+```{r results= 'asis'}
+continent.tbl <- gapminder %>%
+  select(year, continent, country, lifeExp) %>%
+  group_by(year, continent) %>%
+  filter(min_rank(desc(lifeExp)) < 2 | min_rank(lifeExp) < 2) %>% 
+  arrange(year, continent, lifeExp) %>% 
+  ## Paste the min and max life expectancy with the corresponding country for each continent
+  summarize(country_combined = paste(country, lifeExp, collapse=", ")) %>% 
+  spread(continent, country_combined)
+
+knitr::kable(continent.tbl)
+```
+
+
+## Join, merge, look up
+
+**Problem:** You have two data sources and you need info from both in one new data object.
+
+**Solution:** Perform a join, which borrows terminology from the database world, specifically SQL.
+
+## Activity 1: Create a second data frame, complementary to Gapminder. Join this with (part of) Gapminder using a `dplyr` join function and make some observations about the process and result. Explore the different types of joins.
+
+A second data frame with one row per country, and capital city and language spoken as variables. 
+
+```{r results= 'asis'}
+country <- c('Argentina', 'Austria', 'Bangladesh', 'Chad', 
+             'Ecuador', 'Gambia', 'Italy', 'Nepal', 
+             'New Zealand', 'Switzerland', 'Taiwan', 'United Kingdom')
+capital_city <- c('Buenos Aires', 'Vienna', 'Dhaka', "N'Djamena", 
+                  'Quito', 'Banjul', 'Rome', 'Kathmandu',
+                  'Wellington', 'Bern', 'Taipei', 'London')
+language_spoken <- c('Spanish', 'German, Hungarian', 'Bengali',
+                     'French, Arabic', 'Spanish', 'English',
+                     'Italian', 'Nepali', 'English', 'German, French, Italian, Romansh',
+                     'Mandarin Chinese', 'English')
+
+country_data <- data.frame(country, capital_city, language_spoken) 
+
+knitr::kable(country_data)
+```
+
+### `left_join()`
+```{r}
+left_join(gapminder, country_data)
+```
+
+Returns all rows from `gapminder`, and all columns from `gapminder` and `country_data`. Countries that do not appear in `country_data` have an `NA` for `capital_city` and `language_spoken`. Mutating join. 
+
+```{r}
+left_join(country_data, gapminder)
+```
+
+Returns all rows from `country_data`, and all columns from `country_data` and `gapminder`. Only countries that appear in `country_data` are included. Mutating join.
+
+### `inner_join()`
+```{r}
+inner_join(gapminder, country_data)
+```
+
+Returns all rows from `gapminder` that appear in `country_data`, and all columns from both data frames. Similar to `left_join(country_data, gapminder)`. Mutating join.
+
+```{r}
+inner_join(country_data, gapminder)
+```
+
+Returns all rows from `country_data` that appear in `gapminder`, and all columns from both data frames. Similar to `left_join(country_data, gapminder)` and `inner_join(gapminder, country_data)`. Mutating join.
+
+### `full_join()`
+```{r}
+full_join(gapminder, country_data)
+```
+
+Returns all rows and columns from `gapminder` and `country_data`. Countries that do not appear in `country_data` have an `NA` for `capital_city` and `language_spoken`. Similar to `left_join(gapminder, country_data)`. Mutating join.
+
+
+```{r}
+full_join(country_data, gapminder)
+```
+
+Similar result as `full_join(gapminder, country_data)`. Countries that appear in `country_data` are displayed first, followed by the rest of the `gapminder` data. Mutating join. 
+
+### `anti_join()`
+```{r}
+anti_join(gapminder, country_data)
+```
+
+Returns all countries from `gapminder` that are not in `country_data`. Only `gapminder` columns appear. Filtering join. 
+
+```{r}
+anti_join(country_data, gapminder)
+```
+
+Returns all countries from `country_data` that are not in `gapminder`. Since all countries appear in 'gapminder', a blank data frame is returned. Filtering join. 
+
+### `semi_join()`
+```{r}
+semi_join(gapminder, country_data)
+```
+
+Returns all rows from `gapminder` that are appear in `country_data`. Only `gapminder` columns appear. Filtering join. 
+
+```{r}
+semi_join(country_data, gapminder)
+```
+
+Returns all rows from `country_data` that are appear in `country_data`. Only `country_data` columns appear. Filtering join. 
+
+## Activity 3: `merge()` and `match()`
+
+### `merge()`
+
+This function merges two data frames by matching columns or row names. The `all` argument can be used to mimic `dplyr` joins. 
+
+```{r}
+merge(gapminder, country_data, all=TRUE)
+## Similar to full_join(gapminder, country_data)
+```
+
+```{r}
+merge(gapminder, country_data, all=FALSE)
+## Similar to inner_join(gapminder, country_data)
+```
+
+```{r}
+merge(gapminder, country_data, all.x=TRUE)
+## Similar to left_join(gapminder, country_data)
+```
+
+```{r}
+merge(gapminder, country_data, all.x=FALSE)
+## Similar to inner_join(gapminder, country_data)
+```
+
+### `match()`
+
+This function returns a vector of the postions of the first matches between two data frames. 
+
+```{r}
+match(country_data$country, gapminder$country)
+```
+
+Argentina is first in `country_data`. This shows that Argentina is first found on row 49 in `gapminder`. This function does not join or merge data frames, but provides insight into the position of matching data. It can be used to choose approrpiate join functions and show missing variables with `NA`.
