@@ -217,7 +217,7 @@ left_join(gapminder, country_data)
 Returns all rows from `gapminder`, and all columns from `gapminder` and `country_data`. Countries that do not appear in `country_data` have an `NA` for `capital_city` and `language_spoken`. Mutating join. 
 
 ```{r}
-left_join(country_data, gapminder)
+str(left_join(country_data, gapminder))
 ```
 
 Returns all rows from `country_data`, and all columns from `country_data` and `gapminder`. Only countries that appear in `country_data` are included. Mutating join.
@@ -230,7 +230,7 @@ inner_join(gapminder, country_data)
 Returns all rows from `gapminder` that appear in `country_data`, and all columns from both data frames. Similar to `left_join(country_data, gapminder)`. Mutating join.
 
 ```{r}
-inner_join(country_data, gapminder)
+str(inner_join(country_data, gapminder))
 ```
 
 Returns all rows from `country_data` that appear in `gapminder`, and all columns from both data frames. Similar to `left_join(country_data, gapminder)` and `inner_join(gapminder, country_data)`. Mutating join.
@@ -244,7 +244,7 @@ Returns all rows and columns from `gapminder` and `country_data`. Countries that
 
 
 ```{r}
-full_join(country_data, gapminder)
+str(full_join(country_data, gapminder))
 ```
 
 Similar result as `full_join(gapminder, country_data)`. Countries that appear in `country_data` are displayed first, followed by the rest of the `gapminder` data. Mutating join. 
@@ -257,7 +257,7 @@ anti_join(gapminder, country_data)
 Returns all countries from `gapminder` that are not in `country_data`. Only `gapminder` columns appear. Filtering join. 
 
 ```{r}
-anti_join(country_data, gapminder)
+str(anti_join(country_data, gapminder))
 ```
 
 Returns all countries from `country_data` that are not in `gapminder`. Since all countries appear in 'gapminder', a blank data frame is returned. Filtering join. 
@@ -270,7 +270,7 @@ semi_join(gapminder, country_data)
 Returns all rows from `gapminder` that are appear in `country_data`. Only `gapminder` columns appear. Filtering join. 
 
 ```{r}
-semi_join(country_data, gapminder)
+str(semi_join(country_data, gapminder))
 ```
 
 Returns all rows from `country_data` that are appear in `country_data`. Only `country_data` columns appear. Filtering join. 
@@ -282,23 +282,23 @@ Returns all rows from `country_data` that are appear in `country_data`. Only `co
 This function merges two data frames by matching columns or row names. The `all` argument can be used to mimic `dplyr` joins. 
 
 ```{r}
-merge(gapminder, country_data, all=TRUE)
 ## Similar to full_join(gapminder, country_data)
+str(merge(gapminder, country_data, all=TRUE))
 ```
 
 ```{r}
-merge(gapminder, country_data, all=FALSE)
 ## Similar to inner_join(gapminder, country_data)
+str(merge(gapminder, country_data, all=FALSE))
 ```
 
 ```{r}
-merge(gapminder, country_data, all.x=TRUE)
 ## Similar to left_join(gapminder, country_data)
+str(merge(gapminder, country_data, all.x=TRUE))
 ```
 
 ```{r}
-merge(gapminder, country_data, all.x=FALSE)
 ## Similar to inner_join(gapminder, country_data)
+str(merge(gapminder, country_data, all.x=FALSE))
 ```
 
 ### `match()`
