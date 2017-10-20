@@ -3,7 +3,7 @@ STAT545 Homework 05: Factor and Figure Management
 
 The final homework assignment for STAT545 (until STAT547...), let's do this! :neckbeard:
 
-### Tidyveryse, forcats, knitr
+### Load packages
 
 Load tidyverse, forcats, and knitr.
 
@@ -16,6 +16,7 @@ suppressPackageStartupMessages(library(knitr))
 ### Locate Gapminder data
 
 ``` r
+## Locate gapminder package on my system
 (gap_tsv <- system.file("gapminder.tsv", package = "gapminder"))
 ```
 
@@ -24,7 +25,7 @@ suppressPackageStartupMessages(library(knitr))
 Factor Management
 -----------------
 
-### Gapminder version:
+### GAPMINDER VERSION
 
 ### 1. Factorise
 
@@ -56,7 +57,7 @@ str(gapminder, give.attr = FALSE)
     ##  $ pop      : int  8425333 9240934 10267083 11537966 13079460 14880372 12881816 13867957 16317921 22227415 ...
     ##  $ gdpPercap: num  779 821 853 836 740 ...
 
-Strings are not converted to factors, so let's convert `country` and `continent` to factors!
+Strings are not converted to factors, so let's convert `country` and `continent` to factors.
 
 ``` r
 gapminder <- gapminder %>%
@@ -83,10 +84,10 @@ Ta da! We now see that `country` is a factor with 142 levels, and `continent` is
 
 Filter the Gapminder data to remove observations associated with the `continent` of Oceania. Additionally, remove unused factor levels. Provide concrete information on the data before and after removing these rows and Oceania; address the number of rows and the levels of the affected factors.
 
-Before removing Oceania and unused factor levels...
+#### Before removing Oceania and unused factor levels...
 
 ``` r
-str(gapminder)
+str(gapminder) ## structure of original gapminder
 ```
 
     ## Classes 'tbl_df', 'tbl' and 'data.frame':    1704 obs. of  6 variables:
@@ -98,48 +99,49 @@ str(gapminder)
     ##  $ gdpPercap: num  779 821 853 836 740 ...
 
 ``` r
-nrow(gapminder)
+nrow(gapminder) ## total number of rows of original gapminder
 ```
 
     ## [1] 1704
 
 ``` r
-levels(gapminder$continent)
+levels(gapminder$continent) ## levels in original gapminder continent
 ```
 
     ## [1] "Africa"   "Americas" "Asia"     "Europe"   "Oceania"
 
 ``` r
-nlevels(gapminder$continent)
+nlevels(gapminder$continent) ## total number of levels in original gapminder continent
 ```
 
     ## [1] 5
 
 ``` r
-class(gapminder$continent)
+class(gapminder$continent) ## class of original gapminder continent
 ```
 
     ## [1] "factor"
 
 ``` r
-summary(gapminder$continent)
+summary(gapminder$continent) ## summary of original gapminder continent
 ```
 
     ##   Africa Americas     Asia   Europe  Oceania 
     ##      624      300      396      360       24
 
-Drop Oceania and unused factor levels.
+#### Drop Oceania and unused factor levels.
 
 ``` r
+## new_gap will be the filtered gapminder data frame
 new_gap <- gapminder %>%
   filter(continent != "Oceania") %>% 
   droplevels()
 ```
 
-After removing Oceania and unused factor levels...
+#### After removing Oceania and unused factor levels...
 
 ``` r
-str(new_gap)
+str(new_gap) ## structure of filtered gapminder
 ```
 
     ## Classes 'tbl_df', 'tbl' and 'data.frame':    1680 obs. of  6 variables:
@@ -151,39 +153,41 @@ str(new_gap)
     ##  $ gdpPercap: num  779 821 853 836 740 ...
 
 ``` r
-nrow(new_gap)
+nrow(new_gap) ## total number of rows of filtered gapminder
 ```
 
     ## [1] 1680
 
 ``` r
-levels(new_gap$continent)
+levels(new_gap$continent) ## levels in filtered gapminder continent
 ```
 
     ## [1] "Africa"   "Americas" "Asia"     "Europe"
 
 ``` r
-nlevels(new_gap$continent)
+nlevels(new_gap$continent) ## total number of levels of filtered gapminder continent
 ```
 
     ## [1] 4
 
 ``` r
-class(new_gap$continent)
+class(new_gap$continent) ## class of filtered gapminder continent
 ```
 
     ## [1] "factor"
 
 ``` r
-summary(new_gap$continent)
+summary(new_gap$continent) ## summary of filtered gapminder continent
 ```
 
     ##   Africa Americas     Asia   Europe 
     ##      624      300      396      360
 
+After removing Oceania and unused factor levels, the number of rows decreased to 1680 (from 1704), there are 4 levels in continent, and the levels no longer contain Oceania.
+
 ### 3. Reorder the levels of `country` or `continent`
 
-Use the forcats package to change the order of the factor levels, based on a principled summary of one of the quantitative variables. Consider experimenting with a summary statistic beyond the most basic choice of the median.
+Use the `forcats` package to change the order of the factor levels, based on a principled summary of one of the quantitative variables. Consider experimenting with a summary statistic beyond the most basic choice of the median.
 
 Order gapminder countries by maximum population in descending order. This will display the top 10 countries with the greatest maximum population.
 
@@ -235,7 +239,8 @@ Let's look at the importance of reordering factor levels! Here is a plot of gapm
 gap_euro <- gapminder %>% filter(year == 2002, continent == "Europe")
 ggplot(gap_euro, aes(x = country, y = pop)) +
   geom_bar(stat = "identity") +
-  coord_flip()
+  coord_flip() +
+  theme_bw()
 ```
 
 ![](hw05_factor-figure-management_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-10-1.png)
@@ -245,7 +250,8 @@ From this plot, we can see that Germany has the greatest population, but it's ha
 ``` r
 ggplot(gap_euro, aes(x = fct_reorder(country, pop), y = pop)) +
   geom_bar(stat = "identity") +
-  coord_flip()
+  coord_flip() +
+  theme_bw()
 ```
 
 ![](hw05_factor-figure-management_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-11-1.png)
@@ -254,7 +260,7 @@ Ahhh, much better! Now we can easily differentiate the countries with the greate
 
 ### `arrange()`
 
-#### Explore the effects of arrange(). Does merely arranging the data have any effect on, say, a figure?
+#### Explore the effects of `arrange()`. Does merely arranging the data have any effect on, say, a figure?
 
 Arrange population in `gap_euro` which was created above (gapminder European countries in 2002).
 
@@ -264,11 +270,13 @@ gap_euro2 <- gapminder %>%
   arrange(pop)
 ```
 
-Let's see how the data has changed before and after `arrange()`.
+Let's see how the **data** has changed before and after `arrange()`.
+
+BEFORE `arrange()`
 
 ``` r
-## before arrange()
-gap_euro %>% head() %>% kable()
+## row order
+gap_euro %>% head() %>% kable() 
 ```
 
 | country                | continent |  year|  lifeExp|       pop|  gdpPercap|
@@ -281,26 +289,23 @@ gap_euro %>% head() %>% kable()
 | Croatia                | Europe    |  2002|   74.876|   4481020|  11628.389|
 
 ``` r
-gap_euro %>% levels() %>% head()
+## level order
+gap_euro$country %>% fct_drop() %>% levels() %>% head() %>% kable()
 ```
 
-    ## NULL
+|                        |
+|:-----------------------|
+| Albania                |
+| Austria                |
+| Belgium                |
+| Bosnia and Herzegovina |
+| Bulgaria               |
+| Croatia                |
+
+AFTER `arrange()`
 
 ``` r
-head(levels(gap_euro$country)) %>% kable()
-```
-
-|             |
-|:------------|
-| Afghanistan |
-| Albania     |
-| Algeria     |
-| Angola      |
-| Argentina   |
-| Australia   |
-
-``` r
-## after arrange()
+## row order
 gap_euro2 %>% head() %>% kable()
 ```
 
@@ -314,59 +319,62 @@ gap_euro2 %>% head() %>% kable()
 | Bosnia and Herzegovina | Europe    |  2002|   74.090|  4165416|   6018.975|
 
 ``` r
-gap_euro2 %>% levels() %>% head()
+## level order
+gap_euro2$country %>% fct_drop() %>% levels() %>% head() %>% kable()
 ```
 
-    ## NULL
+|                        |
+|:-----------------------|
+| Albania                |
+| Austria                |
+| Belgium                |
+| Bosnia and Herzegovina |
+| Bulgaria               |
+| Croatia                |
+
+Before `arrange()`, countries were listed in alphabetical order in the row order and level order of the data frame.
+
+After `arrange()`, countries were listed in increasing order of maximum population in the row order, but the level order remained alphabetical.
+
+Let's see how the **figure** has changed before and after `arrange()`.
+
+BEFORE `arrange()`
 
 ``` r
-head(levels(gap_euro2$country)) %>% kable()
-```
-
-|             |
-|:------------|
-| Afghanistan |
-| Albania     |
-| Algeria     |
-| Angola      |
-| Argentina   |
-| Australia   |
-
-Before `arrange()`, countries were listed in alphabetical order.
-
-After `arrange()`, countiries were listed in increasing order of maximum population.
-
-Let's see how the figure has changed before and after `arrange()`.
-
-``` r
-## before arrange()
 ggplot(gap_euro, aes(x = country, y = pop)) +
   geom_bar(stat = "identity") +
-  coord_flip()
+  coord_flip() +
+  theme_bw()
 ```
 
-![](hw05_factor-figure-management_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-14-1.png)
+![](hw05_factor-figure-management_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-15-1.png)
+
+AFTER `arrange()`
 
 ``` r
-## after arrange()
 ggplot(gap_euro2, aes(x = country, y = pop)) +
   geom_bar(stat = "identity") +
-  coord_flip()
+  coord_flip() +
+  theme_bw()
 ```
 
-![](hw05_factor-figure-management_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-14-2.png)
+![](hw05_factor-figure-management_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-16-1.png)
 
-No change! Arranging the data does not have any effect on a figure.
+No change! Arranging the data does not have any effect on a figure. However, it changes the row order in a data frame.
 
-#### Explore the effects of reordering a factor and factor reordering coupled with arrange(). Especially, what effect does this have on a figure?
+#### Explore the effects of reordering a factor and factor reordering coupled with `arrange()`. Especially, what effect does this have on a figure?
+
+Let's see how the **data** has changed before and after `arrange()`.
+
+BEFORE `arrange()`
 
 ``` r
-## before arrange()
 gap_euro_reorder <- gapminder %>% 
   filter(year == 2002, continent == "Europe") %>% 
   mutate(country = fct_reorder(country, pop))
 
-gap_euro_reorder %>% head() %>% kable() ## row order
+## row order
+gap_euro_reorder %>% head() %>% kable()
 ```
 
 | country                | continent |  year|  lifeExp|       pop|  gdpPercap|
@@ -379,13 +387,8 @@ gap_euro_reorder %>% head() %>% kable() ## row order
 | Croatia                | Europe    |  2002|   74.876|   4481020|  11628.389|
 
 ``` r
-gap_euro_reorder %>% levels() %>% head() ## level order
-```
-
-    ## NULL
-
-``` r
-head(levels(gap_euro_reorder$country)) %>% kable() ## level order
+## level order
+gap_euro_reorder$country %>% fct_drop() %>% levels() %>% head() %>% kable()
 ```
 
 |                        |
@@ -397,14 +400,16 @@ head(levels(gap_euro_reorder$country)) %>% kable() ## level order
 | Ireland                |
 | Bosnia and Herzegovina |
 
+AFTER `arrange()`
+
 ``` r
-## after arrange()
 gap_euro_reorder2 <- gapminder %>% 
   filter(year == 2002, continent == "Europe") %>% 
   mutate(country = fct_reorder(country, pop)) %>% 
   arrange(pop)
 
-gap_euro_reorder2 %>% head() %>% kable() ## row order
+## row order
+gap_euro_reorder2 %>% head() %>% kable()
 ```
 
 | country                | continent |  year|  lifeExp|      pop|  gdpPercap|
@@ -417,13 +422,8 @@ gap_euro_reorder2 %>% head() %>% kable() ## row order
 | Bosnia and Herzegovina | Europe    |  2002|   74.090|  4165416|   6018.975|
 
 ``` r
-gap_euro_reorder2 %>% levels() %>% head() ## level order
-```
-
-    ## NULL
-
-``` r
-head(levels(gap_euro_reorder2$country)) %>% kable() ## level order
+## level order
+gap_euro_reorder2$country %>% fct_drop() %>% levels() %>% head() %>% kable()
 ```
 
 |                        |
@@ -435,105 +435,121 @@ head(levels(gap_euro_reorder2$country)) %>% kable() ## level order
 | Ireland                |
 | Bosnia and Herzegovina |
 
-Before `arrange()`, the row order did not change and countries were listed in alphabetical order. Level order was changed to countries listed in increasing order of maximum population.
+Before `arrange()`, the row order of countries were listed in alphabetical order. Level order was changed to countries listed in increasing order of maximum population.
 
-After `arrange()`, the row order and level order were changed to countries were listed in increasing order of maximum population.
+After `arrange()`, the row order and level order were changed to countries listed in increasing order of maximum population.
 
-Let's see how the figure has changed before and after `arrange()`.
+Let's see how the **figure** has changed before and after `arrange()`.
+
+BEFORE `arrange()`
 
 ``` r
-## before arrange()
 ggplot(gap_euro_reorder, aes(x = country, y = pop)) +
   geom_bar(stat = "identity") +
-  coord_flip()
+  coord_flip() +
+  theme_bw()
 ```
 
-![](hw05_factor-figure-management_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-16-1.png)
+![](hw05_factor-figure-management_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-19-1.png)
+
+AFTER `arrange()`
 
 ``` r
-## after arrange()
 ggplot(gap_euro_reorder2, aes(x = country, y = pop)) +
   geom_bar(stat = "identity") +
-  coord_flip()
+  coord_flip() +
+  theme_bw()
 ```
 
-![](hw05_factor-figure-management_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-16-2.png)
+![](hw05_factor-figure-management_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-20-1.png)
 
-No change! Arranging the data does not have any effect on a figure that has reordered factors.
+No change! Arranging the data does not have any effect on a figure that has reordered factors. However, it changes the row order in a data frame.
 
-TALK ABOUT ERROR MESSAGES
+From this activity, we can see that `arrange()` does not effect the order of levels in a factor, but instead it changes the order of rows in a data frame.
 
 File I/O
 --------
 
 Experiment with one or more of `write_csv()/read_csv()` (and/or TSV friends), `saveRDS()/readRDS()`, `dput()/dget()`. Create something new, probably by filtering or grouped-summarization of Gapminder. Fiddle with the factor levels, i.e. make them non-alphabetical (see previous section). Explore whether this survives the round trip of writing to file then reading back in.
 
+#### Create something new!
+
+Let's make a country level summary of maximum population.
+
 ``` r
-## country level summary of maximum population 
 gap_max_pop <- gapminder %>%
   filter(year == 2002) %>% 
   group_by(country, continent) %>% 
   summarise(max_pop = max(pop)) %>% 
   ungroup()
-gap_max_pop
+kable(head(gap_max_pop))
 ```
 
-    ## # A tibble: 142 x 3
-    ##        country continent   max_pop
-    ##         <fctr>    <fctr>     <dbl>
-    ##  1 Afghanistan      Asia  25268405
-    ##  2     Albania    Europe   3508512
-    ##  3     Algeria    Africa  31287142
-    ##  4      Angola    Africa  10866106
-    ##  5   Argentina  Americas  38331121
-    ##  6   Australia   Oceania  19546792
-    ##  7     Austria    Europe   8148312
-    ##  8     Bahrain      Asia    656397
-    ##  9  Bangladesh      Asia 135656790
-    ## 10     Belgium    Europe  10311970
-    ## # ... with 132 more rows
+| country     | continent |  max\_pop|
+|:------------|:----------|---------:|
+| Afghanistan | Asia      |  25268405|
+| Albania     | Europe    |   3508512|
+| Algeria     | Africa    |  31287142|
+| Angola      | Africa    |  10866106|
+| Argentina   | Americas  |  38331121|
+| Australia   | Oceania   |  19546792|
 
-Reorder the data!
+#### Reorder the data!
 
 ``` r
-head(levels(gap_max_pop$country)) ## alphabetical order
+## countries are in alphabetical order
+kable(head(levels(gap_max_pop$country)))
 ```
 
-    ## [1] "Afghanistan" "Albania"     "Algeria"     "Angola"      "Argentina"  
-    ## [6] "Australia"
+|             |
+|:------------|
+| Afghanistan |
+| Albania     |
+| Algeria     |
+| Angola      |
+| Argentina   |
+| Australia   |
 
 ``` r
+## reorder to increasing maximum population
 gap_max_pop <- gap_max_pop %>% 
   mutate(country = fct_reorder(country, max_pop))
-head(levels(gap_max_pop$country)) ## increasing order of max pop
+kable(head(levels(gap_max_pop$country)))
 ```
 
-    ## [1] "Sao Tome and Principe" "Iceland"               "Djibouti"             
-    ## [4] "Equatorial Guinea"     "Comoros"               "Bahrain"
+|                       |
+|:----------------------|
+| Sao Tome and Principe |
+| Iceland               |
+| Djibouti              |
+| Equatorial Guinea     |
+| Comoros               |
+| Bahrain               |
 
 ``` r
-head(gap_max_pop) ## row order not changed, level order changed
+## the row order has not changed
+## but the level order changed!
+kable(head(gap_max_pop))
 ```
 
-    ## # A tibble: 6 x 3
-    ##       country continent  max_pop
-    ##        <fctr>    <fctr>    <dbl>
-    ## 1 Afghanistan      Asia 25268405
-    ## 2     Albania    Europe  3508512
-    ## 3     Algeria    Africa 31287142
-    ## 4      Angola    Africa 10866106
-    ## 5   Argentina  Americas 38331121
-    ## 6   Australia   Oceania 19546792
+| country     | continent |  max\_pop|
+|:------------|:----------|---------:|
+| Afghanistan | Asia      |  25268405|
+| Albania     | Europe    |   3508512|
+| Algeria     | Africa    |  31287142|
+| Angola      | Africa    |  10866106|
+| Argentina   | Americas  |  38331121|
+| Australia   | Oceania   |  19546792|
 
-Write the data out!
+#### Write the data out!
 
 ``` r
-write_csv(gap_max_pop, "gap_max_pop.csv")
-saveRDS(gap_max_pop, "gap_max_pop.rds") ## save R object to binary file
-dput(gap_max_pop, "gap_max_pop-dput.txt")
+write_csv(gap_max_pop, "gap_max_pop.csv") ## write to comma-delimited file
+saveRDS(gap_max_pop, "gap_max_pop.rds") ## save to binary file
+dput(gap_max_pop, "gap_max_pop-dput.txt") ## write to plain text
 ```
 
-Read the data!
+#### Read the data!
 
 ``` r
 gap_max_pop_csv <- read_csv("gap_max_pop.csv")
@@ -551,22 +567,24 @@ gap_max_pop_RDS <- readRDS("gap_max_pop.rds")
 gap_max_pop_dget <- dget("gap_max_pop-dput.txt")
 ```
 
-Create a tibble!
+#### Create a tibble!
 
 ``` r
+## first convert countries to factors
 gap_max_pop_csv <- gap_max_pop_csv %>% mutate(country = factor(country))
 gap_max_pop_RDS <- gap_max_pop_RDS %>% mutate(country = factor(country))
 gap_max_pop_dget <- gap_max_pop_dget %>% mutate(country = factor(country))
 
+## tibble to compare the different strategies
 country_levels <- tibble(original = head(levels(gap_max_pop$country)))
 country_levels <- country_levels %>%
   mutate(via_csv = head(levels(gap_max_pop_csv$country)),
-         via_rds = head(levels(gap_max_pop_RDS$country)),
+         via_RDS = head(levels(gap_max_pop_RDS$country)),
          via_dput = head(levels(gap_max_pop_dget$country)))
 kable(country_levels)
 ```
 
-| original              | via\_csv    | via\_rds              | via\_dput             |
+| original              | via\_csv    | via\_RDS              | via\_dput             |
 |:----------------------|:------------|:----------------------|:----------------------|
 | Sao Tome and Principe | Afghanistan | Sao Tome and Principe | Sao Tome and Principe |
 | Iceland               | Albania     | Iceland               | Iceland               |
@@ -575,7 +593,7 @@ kable(country_levels)
 | Comoros               | Argentina   | Comoros               | Comoros               |
 | Bahrain               | Australia   | Bahrain               | Bahrain               |
 
-The original, post-reordering country factor levels are restored using the `saveRDS() / readRDS()` and `dput() / dget()` strategy but revert to alphabetical ordering using `write_csv() / read_csv()`.
+The original (after reordering) country factor levels are restored using the `saveRDS() / readRDS()` and `dput() / dget()` strategy, but return to alphabetical ordering using `write_csv() / read_csv()`.
 
 Visualization design
 --------------------
@@ -587,10 +605,11 @@ Remake figure from above!
 ``` r
 ggplot(gap_euro, aes(x = fct_reorder(country, pop), y = pop)) +
   geom_bar(stat = "identity") +
-  coord_flip()
+  coord_flip() +
+  theme_bw()
 ```
 
-![](hw05_factor-figure-management_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-22-1.png)
+![](hw05_factor-figure-management_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-26-1.png)
 
 Clean up your repo!
 -------------------
