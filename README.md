@@ -1,9 +1,13 @@
 # STAT545 Homework Repository for Amanda Cheung
 
-Here is the link for [homework 02](https://github.com/cheungamanda/STAT545-hw-cheung-amanda/tree/master/hw02). 
+[Homework 02](https://github.com/cheungamanda/STAT545-hw-cheung-amanda/tree/master/hw02)
+Gapminder exploration
 
-Here is the link for [homework 03](https://github.com/cheungamanda/STAT545-hw-cheung-amanda/tree/master/hw03).
+[Homework 03](https://github.com/cheungamanda/STAT545-hw-cheung-amanda/tree/master/hw03)
+Dplyr and ggplot2 exploration
 
-Here is the link for [homework 04](https://github.com/cheungamanda/STAT545-hw-cheung-amanda/tree/master/hw04).
+[Homework 04](https://github.com/cheungamanda/STAT545-hw-cheung-amanda/tree/master/hw04)
+Data reshaping and join functions
 
-Here is the link for [homework 05](https://github.com/cheungamanda/STAT545-hw-cheung-amanda/tree/master/hw05).
+[Homework 05](https://github.com/cheungamanda/STAT545-hw-cheung-amanda/tree/master/hw05)
+Factor and figure management
