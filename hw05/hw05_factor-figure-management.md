@@ -5,12 +5,14 @@ The final homework assignment for STAT545 (until STAT547...) -- let's do this! :
 
 ### Load packages
 
-Load tidyverse, forcats, and knitr.
+Load necessary packages.
 
 ``` r
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(forcats))
 suppressPackageStartupMessages(library(knitr))
+suppressPackageStartupMessages(library(RColorBrewer))
+suppressPackageStartupMessages(library(viridis))
 ```
 
 ### Locate Gapminder data
@@ -245,7 +247,7 @@ ggplot(gap_euro, aes(x = country, y = pop)) +
 
 ![](hw05_factor-figure-management_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-10-1.png)
 
-From this plot, we can see that Germany has the greatest population, but it's hard to see the top 10 countries.
+From this plot, we can see that Germany has the greatest population, but it's hard to rank the top 10 countries.
 
 ``` r
 ggplot(gap_euro, aes(x = fct_reorder(country, pop), y = pop)) +
@@ -600,16 +602,117 @@ Visualization design
 
 Remake at least one figure or create a new one, in light of something you learned in the recent class meetings about visualization design and color. Maybe juxtapose your first attempt and what you obtained after some time spent working on it. Reflect on the differences. If using Gapminder, you can use the country or continent color scheme that ships with Gapminder. Consult the guest lecture from Tamara Munzner and everything here.
 
-### Remake plot of European countries to maximum population in 2002 (from above)!
+### Remake plot of European countries to population in 2002 (from above)!
 
 ``` r
-ggplot(gap_euro, aes(x = fct_reorder(country, pop), y = pop)) +
-  geom_bar(stat = "identity") +
+p1 <- ggplot(gap_euro, aes(x = fct_reorder(country, pop), y = pop)) +
+  geom_bar(stat = "identity", aes(fill=pop)) +
   coord_flip() +
-  theme_bw()
+  theme_bw() +
+  labs(title = "Population of European Countries in 2002") +
+  scale_x_discrete("Country") +
+  scale_y_continuous("Population") +
+  theme(plot.title = element_text(hjust=0.5)) +
+  scale_fill_distiller("Population", palette="Spectral")
+p1
 ```
 
 ![](hw05_factor-figure-management_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-26-1.png)
+
+### Plot of population vs. life expectancy in 2007
+
+``` r
+p2 <- gapminder %>% 
+    filter(year==2007) %>% 
+  ggplot(aes(x=pop, y=lifeExp)) +
+  geom_point(shape=21, aes(size=gdpPercap, fill=continent)) +
+  scale_x_log10() +
+  theme_bw() +
+  labs(title = "Population vs. Life Expectancy in 2007",
+       fill = "Continent",
+       size = "GDP per Capita",
+       x = "Population",
+       y = "Life Expectancy") +
+  theme(plot.title = element_text(hjust=0.5)) +
+  scale_fill_brewer("Continent", palette="Dark2")
+p2
+```
+
+![](hw05_factor-figure-management_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-27-1.png)
+
+### Plot of GDP per capita vs. life expectancy
+
+``` r
+p3 <- gapminder %>% 
+  filter(continent != "Oceania") %>%
+  ggplot(aes(x=gdpPercap, y=lifeExp)) +
+  geom_point(shape=21, aes(size=pop, fill=year)) +
+  facet_wrap(~ continent) +
+  scale_x_log10() +
+  theme_bw() +
+  labs(title = "GDP per Capita vs. Life Expectancy",
+       fill = "Year",
+       size = "Population",
+       x = "GDP per Capita",
+       y = "Life Expectancy") +
+  theme(plot.title = element_text(hjust=0.5)) +
+  scale_fill_distiller(palette="YlGnBu", direction=-1)
+p3
+```
+
+![](hw05_factor-figure-management_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-28-1.png)
+
+### Plot of trends in GDP per capita
+
+``` r
+p4 <- ggplot(gapminder, aes(x=year, y=gdpPercap)) +
+  geom_line(aes(group=country,
+                colour=continent=="Oceania",
+                alpha=continent=="Oceania")) +
+  scale_y_log10() +
+  theme_bw() +
+  scale_colour_manual("",
+                      labels=c("Other Continents", "Oceania"),
+                      values=c("tan", "aquamarine")) +
+  scale_alpha_discrete(range=c(0.2, 1),
+                         guide=FALSE) +
+  labs(title = "Trends in GDP per Capita",
+       x = "Year",
+       y = "GDP per Capita") +
+  theme(plot.title = element_text(hjust=0.5))
+p4
+```
+
+![](hw05_factor-figure-management_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-29-1.png)
+
+Writing figures to file
+-----------------------
+
+`ggsave()`
+
+Manipulating width, height, and resolution in a raster format.
+
+``` r
+ggsave("plot1.png", p1, width = 8, height = 8)
+ggsave("plot2.png", p2, width = 10, height = 4)
+ggsave("plot3.png", p3, dpi = 50)
+```
+
+    ## Saving 7 x 5 in image
+
+``` r
+ggsave("plot4.png", p4, dpi = 300)
+```
+
+    ## Saving 7 x 5 in image
+
+![](plot1.png)
+
+![](plot2.png)
+
+![](plot3.png)
+
+![](plot4.png)
 
 Clean up your repo!
 -------------------
