@@ -720,6 +720,8 @@ Clean up your repo!
 But I want to do more!
 ----------------------
 
+Create an excerpt of the Gapminder data
+
 ``` r
 country <- c('Argentina', 'Austria', 'Bangladesh', 'Chad', 
              'Ecuador', 'Gambia', 'Italy', 'Nepal', 
@@ -729,6 +731,10 @@ capital_city <- c('Buenos Aires', 'Vienna', 'Dhaka', "N'Djamena",
                   'Wellington', 'Bern', 'Taipei', 'London')
 
 country_data <- data.frame(country, capital_city)
+
+country_data <- country_data %>%
+  mutate(country = factor(country),
+         capital_city = factor(capital_city))
 
 kable(country_data)
 ```
