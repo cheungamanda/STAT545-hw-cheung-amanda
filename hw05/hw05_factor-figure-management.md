@@ -732,6 +732,7 @@ capital_city <- c('Buenos Aires', 'Vienna', 'Dhaka', "N'Djamena",
 
 country_data <- data.frame(country, capital_city)
 
+## factorize capital_city to country levels
 country_data <- country_data %>%
   mutate(country = factor(country),
          capital_city = factor(capital_city))
